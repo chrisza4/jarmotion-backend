@@ -30,7 +30,7 @@ defmodule JarmotionWeb.AuthControllerTest do
          end}
       ] do
         conn = post(conn, "/login")
-        assert json_response(conn, 401)
+        assert json_response(conn, 403)["error_message"] == "unauthorized"
       end
     end
   end

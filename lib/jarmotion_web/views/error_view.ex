@@ -1,5 +1,6 @@
 defmodule JarmotionWeb.ErrorView do
   use JarmotionWeb, :view
+  alias JarmotionWeb.Error
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
@@ -12,5 +13,9 @@ defmodule JarmotionWeb.ErrorView do
   # "Not Found".
   def template_not_found(template, _assigns) do
     Phoenix.Controller.status_message_from_template(template)
+  end
+
+  def render("403.json", _) do
+    Error.forbidden()
   end
 end
