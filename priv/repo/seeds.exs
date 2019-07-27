@@ -9,3 +9,12 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Jarmotion.Schemas.User
+password = Bcrypt.hash_pwd_salt("test")
+
+Jarmotion.Repo.UserRepo.insert(%User{
+  id: Ecto.UUID.generate(),
+  email: "chakrit.lj@gmail.com",
+  password: password
+})

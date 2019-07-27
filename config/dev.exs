@@ -74,3 +74,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :jarmotion, Jarmotion.Guardian,
+  issuer: "jarmotion",
+  secret_key: "kVNx2q5Z9TBT2aLGSWe+0GQ4soQtne98L0PY2t+cTGRwqGWByepADun4NRYwNF/g"
