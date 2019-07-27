@@ -10,8 +10,7 @@ use Mix.Config
 config :jarmotion,
   ecto_repos: [Jarmotion.Repo]
 
-config :jarmotion, Jarmotion.Repo,
-  migration_primary_key: [name: :uuid, type: :binary_id]
+config :jarmotion, Jarmotion.Repo, migration_primary_key: [name: :uuid, type: :binary_id]
 
 # Configures the endpoint
 config :jarmotion, JarmotionWeb.Endpoint,

@@ -16,3 +16,7 @@ config :jarmotion, JarmotionWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :jarmotion, Jarmotion.Guardian,
+  issuer: "jarmotion",
+  secret_key: "tXO9b8AH0pfmKgO/k39aeOnSevlHvR3t4NPkfCGcr/o+3CIzv2FD8vxWP3+eIjdW"
