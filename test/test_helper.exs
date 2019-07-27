@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(JarmotionBackend.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Jarmotion.Repo, :manual)

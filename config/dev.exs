@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :jarmotion_backend, JarmotionBackend.Repo,
+config :jarmotion, Jarmotion.Repo,
   username: "postgres",
   password: "postgres",
-  database: "jarmotion_backend_dev",
+  database: "jarmotion_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :jarmotion_backend, JarmotionBackend.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :jarmotion_backend, JarmotionBackendWeb.Endpoint,
+config :jarmotion, JarmotionWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,13 +55,13 @@ config :jarmotion_backend, JarmotionBackendWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :jarmotion_backend, JarmotionBackendWeb.Endpoint,
+config :jarmotion, JarmotionWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/jarmotion_backend_web/{live,views}/.*(ex)$",
-      ~r"lib/jarmotion_backend_web/templates/.*(eex)$"
+      ~r"lib/jarmotion_web/{live,views}/.*(ex)$",
+      ~r"lib/jarmotion_web/templates/.*(eex)$"
     ]
   ]
 

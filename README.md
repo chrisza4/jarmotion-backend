@@ -1,4 +1,4 @@
-# JarmotionBackend
+# Jarmotion
 
 To start your Phoenix server:
 

@@ -1,9 +1,9 @@
-defmodule JarmotionBackend.MixProject do
+defmodule Jarmotion.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :jarmotion_backend,
+      app: :jarmotion,
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule JarmotionBackend.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {JarmotionBackend.Application, []},
+      mod: {Jarmotion.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

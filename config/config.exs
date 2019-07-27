@@ -7,18 +7,18 @@
 # General application configuration
 use Mix.Config
 
-config :jarmotion_backend,
-  ecto_repos: [JarmotionBackend.Repo]
+config :jarmotion,
+  ecto_repos: [Jarmotion.Repo]
 
-config :jarmotion_backend, JarmotionBackend.Repo,
+config :jarmotion, Jarmotion.Repo,
   migration_primary_key: [name: :uuid, type: :binary_id]
 
 # Configures the endpoint
-config :jarmotion_backend, JarmotionBackendWeb.Endpoint,
+config :jarmotion, JarmotionWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "fLCco3ZEi0ycTmmiRlq+fq+4acqrOXiFkF9hnnA3Pub/J+sPkgWneOxJB/2Qu9cB",
-  render_errors: [view: JarmotionBackendWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: JarmotionBackend.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: JarmotionWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Jarmotion.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,

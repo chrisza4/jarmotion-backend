@@ -1,4 +1,4 @@
-defmodule JarmotionBackend.DataCase do
+defmodule Jarmotion.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,20 +16,20 @@ defmodule JarmotionBackend.DataCase do
 
   using do
     quote do
-      alias JarmotionBackend.Repo
+      alias Jarmotion.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import JarmotionBackend.DataCase
+      import Jarmotion.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(JarmotionBackend.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Jarmotion.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(JarmotionBackend.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Jarmotion.Repo, {:shared, self()})
     end
 
     :ok

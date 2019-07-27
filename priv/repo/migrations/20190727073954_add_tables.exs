@@ -1,4 +1,4 @@
-defmodule JarmotionBackend.Repo.Migrations.AddTables do
+defmodule Jarmotion.Repo.Migrations.AddTables do
   use Ecto.Migration
 
   def change do

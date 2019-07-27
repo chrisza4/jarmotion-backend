@@ -1,4 +1,4 @@
-defmodule JarmotionBackend.Repo.Migrations.UniqueEmail do
+defmodule Jarmotion.Repo.Migrations.UniqueEmail do
   use Ecto.Migration
 
   def change do

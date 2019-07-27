@@ -1,16 +1,16 @@
 use Mix.Config
 
 # Configure your database
-config :jarmotion_backend, JarmotionBackend.Repo,
+config :jarmotion, Jarmotion.Repo,
   username: "postgres",
   password: "postgres",
-  database: "jarmotion_backend_test",
+  database: "jarmotion_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :jarmotion_backend, JarmotionBackendWeb.Endpoint,
+config :jarmotion, JarmotionWeb.Endpoint,
   http: [port: 4002],
   server: false
 
