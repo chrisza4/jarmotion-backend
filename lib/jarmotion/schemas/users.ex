@@ -1,7 +1,7 @@
 defmodule Jarmotion.Schemas.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Jarmotion.Schemas.User
+  alias Jarmotion.Schemas.{User, UserInfo}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
@@ -17,5 +17,9 @@ defmodule Jarmotion.Schemas.User do
     |> validate_required([:id, :email, :password])
     |> unique_constraint(:email, name: :users_email_index)
     |> unique_constraint(:id, name: :users_pkey)
+  end
+
+  def to_user_info(%User{} = user) do
+    %UserInfo{id: user.id, email: user.email}
   end
 end

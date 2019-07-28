@@ -7,7 +7,7 @@ defmodule JarmotionWeb.AuthControllerTest do
     test "success", %{conn: conn} do
       with_mocks [
         {Jarmotion.Service.AuthService, [],
-         login_for_user: fn _, _ ->
+         login_for_user: fn "test@test.com", _ ->
            {:ok,
             %User{
               id: "59bf0ca9-9865-4a6b-963c-766866fdb6b8",
@@ -17,7 +17,7 @@ defmodule JarmotionWeb.AuthControllerTest do
          end},
         {Jarmotion.Guardian, [], encode_and_sign: fn _ -> {:ok, "random_jwt_token", nil} end}
       ] do
-        conn = post(conn, "/login")
+        conn = post(conn, "/login", %{"email" => "test@test.com", "password" => "password"})
         assert json_response(conn, 200)["jwt"] == "random_jwt_token"
       end
     end

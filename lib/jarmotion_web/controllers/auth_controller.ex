@@ -5,8 +5,8 @@ defmodule JarmotionWeb.AuthController do
 
   action_fallback JarmotionWeb.ErrorController
 
-  def login(conn, _params) do
-    with {:ok, user} <- AuthService.login_for_user("", ""),
+  def login(conn, params) do
+    with {:ok, user} <- AuthService.login_for_user(params["email"], params["password"]),
          {:ok, token, _} <- Guardian.encode_and_sign(user) do
       conn |> render("jwt.json", jwt: token)
     end

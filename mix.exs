@@ -45,7 +45,8 @@ defmodule Jarmotion.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.0"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false}
     ]
   end
 
