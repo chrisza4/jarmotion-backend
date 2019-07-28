@@ -15,7 +15,7 @@ defmodule JarmotionWeb.ErrorView do
     Phoenix.Controller.status_message_from_template(template)
   end
 
-  def render("403.json", _) do
-    Error.forbidden()
+  def render("403.json", %{message: message}) do
+    Error.forbidden(message)
   end
 end

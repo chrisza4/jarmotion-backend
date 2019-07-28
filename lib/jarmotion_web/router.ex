@@ -13,6 +13,10 @@ defmodule JarmotionWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug JarmotionWeb.Guardian.AuthPipeline
+  end
+
   scope "/", JarmotionWeb do
     pipe_through :browser
 
@@ -21,7 +25,11 @@ defmodule JarmotionWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", JarmotionWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", JarmotionWeb do
+    pipe_through [:api, :jwt_authenticated]
+
+    scope "/emoji" do
+      get "/", EmojiController, :list
+    end
+  end
 end

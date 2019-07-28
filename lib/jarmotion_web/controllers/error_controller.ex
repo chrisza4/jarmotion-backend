@@ -1,4 +1,5 @@
 defmodule JarmotionWeb.ErrorController do
+  import Plug.Conn
   use Phoenix.Controller
   alias JarmotionWeb.ErrorView
 
@@ -14,5 +15,12 @@ defmodule JarmotionWeb.ErrorController do
     |> put_status(403)
     |> put_view(ErrorView)
     |> render("403.json", %{message: "unauthorized"})
+  end
+
+  def auth_error(conn, _, _) do
+    conn
+    |> put_status(403)
+    |> put_view(ErrorView)
+    |> render("403.json", %{message: "forbidden"})
   end
 end
