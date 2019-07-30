@@ -1,6 +1,5 @@
 defmodule Jarmotion.Guardian do
   use Guardian, otp_app: :jarmotion
-  alias Jarmotion.Repo.UserRepo
 
   def subject_for_token(%{id: _} = resource, _claims) do
     # You can use any value for the subject of your token but
@@ -21,8 +20,7 @@ defmodule Jarmotion.Guardian do
     # found in the `"sub"` key. In `above subject_for_token/2` we returned
     # the resource id so here we'll rely on that to look it up.
     id = claims["sub"]
-    resource = UserRepo.get(id)
-    {:ok, resource}
+    {:ok, id}
   end
 
   def resource_from_claims(_claims) do

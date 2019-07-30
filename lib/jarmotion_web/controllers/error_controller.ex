@@ -17,6 +17,13 @@ defmodule JarmotionWeb.ErrorController do
     |> render("403.json", %{message: "unauthorized"})
   end
 
+  def call(conn, {:error, :forbidden}) do
+    conn
+    |> put_status(403)
+    |> put_view(ErrorView)
+    |> render("403.json", %{message: "forbidden"})
+  end
+
   def auth_error(conn, _, _) do
     conn
     |> put_status(403)

@@ -29,7 +29,7 @@ defmodule JarmotionWeb.Router do
     pipe_through [:api, :jwt_authenticated]
 
     scope "/emoji" do
-      get "/", EmojiController, :list
+      get "/:id", EmojiController, :list
     end
   end
 end

@@ -24,6 +24,8 @@ defmodule JarmotionWeb do
       import Plug.Conn
       import JarmotionWeb.Gettext
       alias JarmotionWeb.Router.Helpers, as: Routes
+
+      def current_user_id(conn), do: Jarmotion.Guardian.Plug.current_resource(conn)
     end
   end
 

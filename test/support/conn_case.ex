@@ -20,9 +20,17 @@ defmodule JarmotionWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       alias JarmotionWeb.Router.Helpers, as: Routes
+      alias Jarmotion.Guardian
+      alias Jarmotion.Schemas.User
 
       # The default endpoint for testing
       @endpoint JarmotionWeb.Endpoint
+
+      def authenticate(conn, %User{} = user) do
+        {:ok, jwt, _claims} = Guardian.encode_and_sign(user, %{role: :admin})
+
+        put_req_header(conn, "authorization", "Bearer #{jwt}")
+      end
     end
   end
 
