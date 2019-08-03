@@ -2,6 +2,7 @@ defmodule Jarmotion.Service.EmojiServiceTest do
   use JarmotionWeb.ConnCase, async: true
   alias Jarmotion.TestSetup
   alias Jarmotion.Service.EmojiService
+  alias Jarmotion.Schemas.Emoji
 
   describe "get_emojis" do
     setup %{} do
@@ -10,6 +11,8 @@ defmodule Jarmotion.Service.EmojiServiceTest do
       {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
       {:ok, emoji_awa} = TestSetup.create_emoji(awa.id)
       {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
+      {:ok, past, 0} = DateTime.from_iso8601("2015-01-23T23:50:07Z")
+      TestSetup.create_emoji(chris.id, %{inserted_at: past})
       TestSetup.create_relationship(chris.id, awa.id)
 
       {:ok,
@@ -58,7 +61,12 @@ defmodule Jarmotion.Service.EmojiServiceTest do
     end
 
     test "Should be able to add emoji", %{chris: chris} do
-      {:ok, emoji_chris} = EmojiService.add_emoji(chris.id, "heart")
+      {:ok, emoji_chris} =
+        EmojiService.add_emoji(%Emoji{
+          owner_id: chris.id,
+          type: "heart"
+        })
+
       {:ok, actual} = EmojiService.get_emojis(chris.id, chris.id)
       assert Enum.at(actual, 0).id == emoji_chris.id
     end

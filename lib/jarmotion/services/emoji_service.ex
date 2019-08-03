@@ -8,9 +8,8 @@ defmodule Jarmotion.Service.EmojiService do
     end
   end
 
-  def add_emoji(owner_id, type) do
-    Emoji.changeset(%Emoji{}, %{owner_id: owner_id, type: type})
-    |> EmojiRepo.insert()
+  def add_emoji(%Emoji{} = emoji) do
+    EmojiRepo.insert(emoji)
   end
 
   defp validate_can_see(user_id_1, user_id_2) do

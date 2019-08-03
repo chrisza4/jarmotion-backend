@@ -8,7 +8,8 @@
 use Mix.Config
 
 config :jarmotion,
-  ecto_repos: [Jarmotion.Repo]
+  ecto_repos: [Jarmotion.Repo],
+  timezone: "Asia/Bangkok"
 
 config :jarmotion, Jarmotion.Repo, migration_primary_key: [name: :uuid, type: :binary_id]
 
@@ -30,3 +31,5 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase

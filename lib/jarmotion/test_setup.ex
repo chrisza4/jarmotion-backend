@@ -1,5 +1,5 @@
 defmodule Jarmotion.TestSetup do
-  alias Jarmotion.Schemas.{User, Emoji, Relationship}
+  alias Jarmotion.Schemas.{User, Relationship}
   alias Jarmotion.Repo.{UserRepo, EmojiRepo, RelationshipRepo}
   alias Jarmotion.Mocks
 
@@ -13,8 +13,7 @@ defmodule Jarmotion.TestSetup do
   end
 
   def create_emoji(owner_id, %{} = override_info \\ %{}) do
-    Mocks.emoji(owner_id)
-    |> Emoji.changeset(override_info)
+    Map.merge(Mocks.emoji(owner_id), override_info)
     |> EmojiRepo.insert()
   end
 
