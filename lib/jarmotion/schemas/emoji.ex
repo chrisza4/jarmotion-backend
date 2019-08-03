@@ -6,7 +6,7 @@ defmodule Jarmotion.Schemas.Emoji do
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "emojis" do
     field :type, :string
-    field :owner_id, :string
+    field :owner_id, :binary_id
     timestamps()
   end
 
@@ -14,5 +14,6 @@ defmodule Jarmotion.Schemas.Emoji do
   def changeset(%Emoji{} = emoji, attrs) do
     emoji
     |> cast(attrs, [:id, :type, :owner_id])
+    |> validate_required([:type, :owner_id])
   end
 end

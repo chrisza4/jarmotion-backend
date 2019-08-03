@@ -19,7 +19,7 @@ defmodule Jarmotion.Mocks do
     password: "hash_randomly"
   }
 
-  def user_sample, do: @user_sample
+  def user_sample, do: %User{@user_sample | id: Ecto.UUID.generate()}
   def user_chris, do: @user_chris
   def user_awa, do: @user_awa
 
