@@ -17,7 +17,7 @@ defmodule JarmotionWeb.AuthControllerTest do
          end},
         {Jarmotion.Guardian, [], encode_and_sign: fn _ -> {:ok, "random_jwt_token", nil} end}
       ] do
-        conn = post(conn, "/login", %{"email" => "test@test.com", "password" => "password"})
+        conn = post(conn, "/api/login", %{"email" => "test@test.com", "password" => "password"})
         assert json_response(conn, 200)["jwt"] == "random_jwt_token"
       end
     end
@@ -29,7 +29,7 @@ defmodule JarmotionWeb.AuthControllerTest do
            {:error, :unauthorized}
          end}
       ] do
-        conn = post(conn, "/login")
+        conn = post(conn, "/api/login")
         assert json_response(conn, 403)["error_message"] == "unauthorized"
       end
     end

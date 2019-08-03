@@ -21,12 +21,14 @@ defmodule JarmotionWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    post "/login", AuthController, :login
   end
 
   # Other scopes may use custom stacks.
   scope "/api", JarmotionWeb do
-    pipe_through [:api, :jwt_authenticated]
+    pipe_through :api
+    post "/login", AuthController, :login
+
+    pipe_through :jwt_authenticated
 
     scope "/emoji" do
       get "/:id", EmojiController, :list
