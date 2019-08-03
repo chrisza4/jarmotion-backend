@@ -49,10 +49,18 @@ defmodule Jarmotion.Service.EmojiServiceTest do
     end
   end
 
-  @tag :skip
   describe "add_emoji" do
-    test "Should be able to add emoji" do
-      # EmojiService.add_emoji()
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
+
+      {:ok, chris: chris, emoji_chris: emoji_chris}
+    end
+
+    test "Should be able to add emoji", %{chris: chris} do
+      {:ok, emoji_chris} = EmojiService.add_emoji(chris.id, "heart")
+      {:ok, actual} = EmojiService.get_emojis(chris.id, chris.id)
+      assert Enum.at(actual, 0).id == emoji_chris.id
     end
   end
 end
