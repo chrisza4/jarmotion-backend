@@ -14,9 +14,5 @@ defmodule Jarmotion.Schemas.Emoji do
   def changeset(%Emoji{} = emoji, attrs) do
     emoji
     |> cast(attrs, [:id, :type, :owner_id])
-
-    # |> validate_required([:id, :email, :password])
-    # |> unique_constraint(:email, name: :users_email_index)
-    # |> unique_constraint(:id, name: :users_pkey)
   end
 end
