@@ -53,4 +53,57 @@ defmodule JarmotionWeb.EmojiControllerTest do
       end
     end
   end
+
+  describe "POST /emoji" do
+    test "Should be able to save emoji", %{conn: conn} do
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         add_emoji: fn emoji ->
+           {:ok, emoji}
+         end}
+      ] do
+        user = Mocks.user_chris()
+
+        emoji =
+          Mocks.emoji(user.id)
+          |> Map.from_struct()
+          |> Map.delete(:__meta__)
+          |> Map.put(:owner_id, "null")
+
+        response =
+          conn
+          |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
+          |> post(Routes.emoji_path(conn, :post, emoji))
+          |> json_response(200)
+
+        assert response["id"] == emoji.id
+        assert response["type"] == emoji.type
+        assert response["owner_id"] == user.id
+      end
+    end
+
+    test "Reject invalid emoji input", %{conn: conn} do
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         add_emoji: fn emoji ->
+           {:ok, emoji}
+         end}
+      ] do
+        user = Mocks.user_chris()
+
+        emoji =
+          Mocks.emoji(user.id)
+          |> Map.from_struct()
+          |> Map.delete(:__meta__)
+          |> Map.put(:type, "random_emoji_type")
+          |> Map.put(:owner_id, "null")
+
+        response =
+          conn
+          |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
+          |> post(Routes.emoji_path(conn, :post, emoji))
+          |> json_response(422)
+      end
+    end
+  end
 end

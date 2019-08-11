@@ -24,6 +24,20 @@ defmodule JarmotionWeb.ErrorController do
     |> render("403.json", %{message: "forbidden"})
   end
 
+  def call(conn, {:error, :invalid_input, changeset}) do
+    conn
+    |> put_status(422)
+    |> put_view(ErrorView)
+    |> render("422.json", %{changeset: changeset})
+  end
+
+  def call(conn, {:error}) do
+    conn
+    |> put_status(500)
+    |> put_view(ErrorView)
+    |> render("500.json", %{message: "Internal Server error"})
+  end
+
   def auth_error(conn, _, _) do
     conn
     |> put_status(403)
