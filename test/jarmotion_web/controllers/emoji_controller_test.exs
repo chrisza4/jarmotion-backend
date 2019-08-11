@@ -5,7 +5,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
   import Mock
 
   describe "GET /emoji" do
-    test "Get own emoji", %{conn: conn} do
+    test "Get related people emoji by /emoji/:id", %{conn: conn} do
       chris_user_id = Mocks.user_chris().id
       awa_user_id = Mocks.user_awa().id
 
@@ -24,10 +24,40 @@ defmodule JarmotionWeb.EmojiControllerTest do
            end
          end}
       ] do
-        %{"data" => emojis_response} =
+        emojis_response =
           conn
           |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
           |> get(Routes.emoji_path(conn, :list, awa_user_id))
+          |> json_response(200)
+
+        assert length(emojis_response) == 2
+        assert Enum.at(emojis_response, 0)["id"] == Enum.at(emojis, 0).id
+        assert Enum.at(emojis_response, 1)["id"] == Enum.at(emojis, 1).id
+      end
+    end
+
+    test "Get own emoji by /emoji", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+
+      emojis = [
+        Mocks.emoji(Mocks.user_awa().id),
+        Mocks.emoji(Mocks.user_awa().id)
+      ]
+
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         get_emojis: fn user_id, by_user_id ->
+           if(by_user_id == chris_user_id and user_id == chris_user_id) do
+             {:ok, emojis}
+           else
+             {:error, :forbidden}
+           end
+         end}
+      ] do
+        emojis_response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.emoji_path(conn, :list_owner))
           |> json_response(200)
 
         assert length(emojis_response) == 2
@@ -98,11 +128,10 @@ defmodule JarmotionWeb.EmojiControllerTest do
           |> Map.put(:type, "random_emoji_type")
           |> Map.put(:owner_id, "null")
 
-        response =
-          conn
-          |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
-          |> post(Routes.emoji_path(conn, :post, emoji))
-          |> json_response(422)
+        conn
+        |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
+        |> post(Routes.emoji_path(conn, :post, emoji))
+        |> json_response(422)
       end
     end
   end

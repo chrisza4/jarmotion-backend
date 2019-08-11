@@ -13,6 +13,14 @@ defmodule JarmotionWeb.EmojiController do
     end
   end
 
+  def list_owner(conn, _) do
+    by_user_id = current_user_id(conn)
+
+    with {:ok, emojis} <- EmojiService.get_emojis(by_user_id, by_user_id) do
+      render(conn, "list.json", emojis: emojis)
+    end
+  end
+
   def post(conn, params) do
     by_user_id = current_user_id(conn)
 

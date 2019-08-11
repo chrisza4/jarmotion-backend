@@ -2,9 +2,7 @@ defmodule JarmotionWeb.EmojiView do
   use JarmotionWeb, :view
 
   def render("list.json", %{emojis: emojis}) do
-    %{
-      data: render_many(emojis, JarmotionWeb.EmojiView, "emoji.json")
-    }
+    render_many(emojis, JarmotionWeb.EmojiView, "emoji.json")
   end
 
   def render("emoji.json", %{emoji: emoji}) do

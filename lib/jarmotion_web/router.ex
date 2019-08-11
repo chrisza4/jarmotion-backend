@@ -32,6 +32,7 @@ defmodule JarmotionWeb.Router do
 
     scope "/emoji" do
       get "/:id", EmojiController, :list
+      get "/", EmojiController, :list_owner
       post "/", EmojiController, :post
     end
   end
