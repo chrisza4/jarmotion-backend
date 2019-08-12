@@ -1,4 +1,4 @@
-defmodule JarmotionWeb.EmojiControllerTest do
+defmodule JarmotionWeb.RelationshipControllerTest do
   use JarmotionWeb.ConnCase
   alias Jarmotion.Schemas.{User}
   alias Jarmotion.Mocks

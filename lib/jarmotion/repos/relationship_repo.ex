@@ -15,4 +15,22 @@ defmodule Jarmotion.Repo.RelationshipRepo do
     )
     |> Repo.exists?()
   end
+
+  def get_friend_ids(user_id) do
+    friend_1 =
+      from(relationship in Relationship,
+        where: relationship.user_id_1 == ^user_id,
+        select: relationship.user_id_2
+      )
+      |> Repo.all()
+
+    friend_2 =
+      from(relationship in Relationship,
+        where: relationship.user_id_2 == ^user_id,
+        select: relationship.user_id_1
+      )
+      |> Repo.all()
+
+    friend_1 ++ friend_2
+  end
 end
