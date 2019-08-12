@@ -7,14 +7,15 @@ defmodule Jarmotion.Schemas.User do
   schema "users" do
     field :email, :string
     field :password, :string
+    field :name, :string
     timestamps()
   end
 
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:id, :email, :password])
-    |> validate_required([:id, :email, :password])
+    |> cast(attrs, [:id, :email, :password, :name])
+    |> validate_required([:id, :email, :password, :name])
     |> unique_constraint(:email, name: :users_email_index)
     |> unique_constraint(:id, name: :users_pkey)
   end
