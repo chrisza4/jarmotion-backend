@@ -6,4 +6,13 @@ defmodule Jarmotion.Service.UserService do
      RelationshipRepo.get_friend_ids(owner_id)
      |> UserRepo.get_by_ids()}
   end
+
+  def get(user_id) do
+    user = UserRepo.get(user_id)
+
+    case user do
+      nil -> {:error, :not_found}
+      user -> {:ok, user}
+    end
+  end
 end
