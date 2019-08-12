@@ -37,7 +37,7 @@ defmodule JarmotionWeb.Router do
     end
 
     scope "/relationship" do
-      get "/", RelationshipController, :list
+      get "/", UserController, :friends
     end
   end
 end

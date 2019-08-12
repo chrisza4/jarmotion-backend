@@ -1,4 +1,4 @@
-defmodule Jarmotion.Service.RelationshipService do
+defmodule Jarmotion.Service.UserService do
   alias Jarmotion.Repo.{RelationshipRepo, UserRepo}
 
   def get_users_in_relationship(owner_id) do

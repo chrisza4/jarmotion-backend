@@ -1,7 +1,7 @@
-defmodule Jarmotion.Service.RelationshipServiceTest do
+defmodule Jarmotion.Service.UserServiceTest do
   use JarmotionWeb.ConnCase, async: true
   alias Jarmotion.TestSetup
-  alias Jarmotion.Service.RelationshipService
+  alias Jarmotion.Service.UserService
 
   describe "get_users_in_relationship" do
     setup %{} do
@@ -17,10 +17,10 @@ defmodule Jarmotion.Service.RelationshipServiceTest do
       chris: chris,
       awa: awa
     } do
-      {:ok, list} = RelationshipService.get_users_in_relationship(chris.id)
+      {:ok, list} = UserService.get_users_in_relationship(chris.id)
       assert list == [awa]
 
-      {:ok, list} = RelationshipService.get_users_in_relationship(awa.id)
+      {:ok, list} = UserService.get_users_in_relationship(awa.id)
       assert list == [chris]
     end
   end

@@ -1,4 +1,4 @@
-defmodule JarmotionWeb.RelationshipControllerTest do
+defmodule JarmotionWeb.UserControllerTest do
   use JarmotionWeb.ConnCase
   alias Jarmotion.Schemas.{User}
   alias Jarmotion.Mocks
@@ -11,7 +11,7 @@ defmodule JarmotionWeb.RelationshipControllerTest do
       chris_user_id = Mocks.user_chris().id
 
       with_mocks [
-        {Jarmotion.Service.RelationshipService, [],
+        {Jarmotion.Service.UserService, [],
          get_users_in_relationship: fn user_id ->
            if user_id == chris_user_id do
              {:ok, [chris, awa]}
@@ -23,7 +23,7 @@ defmodule JarmotionWeb.RelationshipControllerTest do
         response =
           conn
           |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
-          |> get(Routes.relationship_path(conn, :list))
+          |> get(Routes.user_path(conn, :friends))
           |> json_response(200)
 
         assert length(response) == 2

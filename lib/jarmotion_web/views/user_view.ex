@@ -8,4 +8,8 @@ defmodule JarmotionWeb.UserView do
       email: user.email
     }
   end
+
+  def render("list.json", %{users: users}) do
+    render_many(users, JarmotionWeb.UserView, "user.json")
+  end
 end
