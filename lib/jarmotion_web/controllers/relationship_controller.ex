@@ -1,11 +1,12 @@
 defmodule JarmotionWeb.RelationshipController do
   use JarmotionWeb, :controller
-  # alias Jarmotion.Guardian
-  # alias Jarmotion.Service.RelationshipService
+  alias Jarmotion.Service.RelationshipService
 
   action_fallback JarmotionWeb.ErrorController
 
-  def login(conn, _params) do
-    conn |> render("relationship.json", %{users: []})
+  def list(conn, _params) do
+    with {:ok, users} <- RelationshipService.get_users_in_relationship(current_user_id(conn)) do
+      conn |> render("relationship.json", %{users: users})
+    end
   end
 end
