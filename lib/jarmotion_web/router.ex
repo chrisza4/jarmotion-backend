@@ -36,8 +36,9 @@ defmodule JarmotionWeb.Router do
       post "/", EmojiController, :post
     end
 
-    scope "/relationship" do
-      get "/", UserController, :friends
+    scope "/users" do
+      get "/relationship", UserController, :significant_one
+      get "/me", UserController, :me
     end
   end
 end
