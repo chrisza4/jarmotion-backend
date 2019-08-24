@@ -1,12 +1,12 @@
 defmodule Jarmotion.Schemas.Relationship do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Jarmotion.Schemas.{Relationship}
+  alias Jarmotion.Schemas.{Relationship, User}
 
   @primary_key false
   schema "relationship" do
-    field :user_id_1, :binary_id
-    field :user_id_2, :binary_id
+    belongs_to :user_1, User, foreign_key: :user_id_1, type: :binary_id
+    belongs_to :user_2, User, foreign_key: :user_id_2, type: :binary_id
 
     timestamps()
   end

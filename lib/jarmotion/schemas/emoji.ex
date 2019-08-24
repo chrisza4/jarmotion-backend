@@ -1,14 +1,15 @@
 defmodule Jarmotion.Schemas.Emoji do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Jarmotion.Schemas.Emoji
+  alias Jarmotion.Schemas.{Emoji, User}
 
   @emoji_types ["heart"]
   @primary_key {:id, :binary_id, autogenerate: true}
   @timestamps_opts [type: :utc_datetime]
   schema "emojis" do
     field :type, :string
-    field :owner_id, :binary_id
+    belongs_to :owner, User, foreign_key: :owner_id, type: :binary_id
+
     timestamps()
   end
 
