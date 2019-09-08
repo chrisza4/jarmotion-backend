@@ -25,7 +25,8 @@ defmodule JarmotionWeb.EmojiController do
     by_user_id = current_user_id(conn)
 
     with {:ok, new_emoji} <- params |> Map.put("owner_id", by_user_id) |> Emoji.new(),
-         {:ok, new_emoji} <- EmojiService.add_emoji(new_emoji) do
+         {:ok, new_emoji} <-
+           EmojiService.add_emoji(new_emoji) do
       render(conn, "emoji.json", %{emoji: new_emoji})
     end
   end

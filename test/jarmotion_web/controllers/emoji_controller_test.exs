@@ -2,6 +2,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
   use JarmotionWeb.ConnCase
   alias Jarmotion.Schemas.{User}
   alias Jarmotion.Mocks
+  alias Jarmotion.Utils
   import Mock
 
   describe "GET /emoji" do
@@ -98,7 +99,9 @@ defmodule JarmotionWeb.EmojiControllerTest do
           Mocks.emoji(user.id)
           |> Map.from_struct()
           |> Map.delete(:__meta__)
+          |> Map.delete(:owner)
           |> Map.put(:owner_id, "null")
+          |> Utils.to_keyword_list()
 
         response =
           conn
@@ -106,8 +109,8 @@ defmodule JarmotionWeb.EmojiControllerTest do
           |> post(Routes.emoji_path(conn, :post, emoji))
           |> json_response(200)
 
-        assert response["id"] == emoji.id
-        assert response["type"] == emoji.type
+        assert response["id"] == Keyword.get(emoji, :id)
+        assert response["type"] == Keyword.get(emoji, :type)
         assert response["owner_id"] == user.id
       end
     end
@@ -125,8 +128,10 @@ defmodule JarmotionWeb.EmojiControllerTest do
           Mocks.emoji(user.id)
           |> Map.from_struct()
           |> Map.delete(:__meta__)
+          |> Map.delete(:owner)
           |> Map.put(:type, "random_emoji_type")
           |> Map.put(:owner_id, "null")
+          |> Utils.to_keyword_list()
 
         conn
         |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
