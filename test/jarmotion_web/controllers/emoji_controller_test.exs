@@ -12,7 +12,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
 
       with_mocks [
         {Jarmotion.Service.EmojiService, [],
-         get_emoji: fn _ ->
+         get_emoji: fn _, _ ->
            {:ok, emoji}
          end}
       ] do
@@ -31,7 +31,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
 
       with_mocks [
         {Jarmotion.Service.EmojiService, [],
-         get_emoji: fn _ ->
+         get_emoji: fn _, _ ->
            {:error, :forbidden}
          end}
       ] do
