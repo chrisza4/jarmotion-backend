@@ -6,6 +6,47 @@ defmodule JarmotionWeb.EmojiControllerTest do
   import Mock
 
   describe "GET /emoji" do
+    test "Get emoji return emoji with 200 when user allow to get emoji", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      emoji = Mocks.emoji(Mocks.user_chris().id)
+
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         get_emoji: fn _ ->
+           {:ok, emoji}
+         end}
+      ] do
+        emojis_response =
+          build_conn()
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.emoji_path(conn, :get, emoji.id))
+          |> json_response(200)
+
+        assert emojis_response["id"] == emoji.id
+      end
+    end
+
+    test "Get emoji return emoji with 403 when user is not allowed to get emoji", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         get_emoji: fn _ ->
+           {:error, :forbidden}
+         end}
+      ] do
+        response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.emoji_path(conn, :get, "some-unavailable-emoji-id"))
+          |> json_response(403)
+
+        assert response["error_message"] == "forbidden"
+      end
+    end
+  end
+
+  describe "GET /emoji/user" do
     test "Get related people emoji by /emoji/:id", %{conn: conn} do
       chris_user_id = Mocks.user_chris().id
       awa_user_id = Mocks.user_awa().id

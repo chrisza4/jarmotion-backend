@@ -21,4 +21,6 @@ defmodule Jarmotion.Repo.EmojiRepo do
     )
     |> Repo.all()
   end
+
+  def get(id), do: Repo.get(Emoji, id)
 end

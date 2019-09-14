@@ -34,10 +34,7 @@ defmodule JarmotionWeb.Router do
     scope "/emoji" do
       get "/user/:id", EmojiController, :list
       get "/user", EmojiController, :list_owner
-      # These will be wired to new endpoint ==============
-      get "/:id", EmojiController, :list
-      get "/", EmojiController, :list_owner
-      # ==================================================
+      get "/:id", EmojiController, :get
       post "/", EmojiController, :post
     end
 

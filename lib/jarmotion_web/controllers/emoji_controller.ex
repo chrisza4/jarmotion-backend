@@ -5,6 +5,14 @@ defmodule JarmotionWeb.EmojiController do
 
   action_fallback JarmotionWeb.ErrorController
 
+  def get(conn, %{"id" => emoji_id}) do
+    by_user_id = current_user_id(conn)
+
+    with {:ok, emoji} <- EmojiService.get_emoji(by_user_id, emoji_id) do
+      render(conn, "emoji.json", %{emoji: emoji})
+    end
+  end
+
   def list(conn, %{"id" => user_id}) do
     by_user_id = current_user_id(conn)
 

@@ -54,6 +54,60 @@ defmodule Jarmotion.Service.EmojiServiceTest do
     end
   end
 
+  describe "get_emoji" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
+      {:ok, emoji_awa} = TestSetup.create_emoji(awa.id)
+      {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
+      {:ok, past, 0} = DateTime.from_iso8601("2015-01-23T23:50:07Z")
+      TestSetup.create_emoji(chris.id, %{inserted_at: past})
+      TestSetup.create_relationship(chris.id, awa.id)
+
+      {:ok,
+       chris: chris,
+       awa: awa,
+       randomguy: randomguy,
+       emoji_awa: emoji_awa,
+       emoji_chris: emoji_chris}
+    end
+
+    test "chris and awa should be able to get each other emoji", %{
+      chris: chris,
+      awa: awa,
+      emoji_awa: emoji_awa,
+      emoji_chris: emoji_chris
+    } do
+      {:ok, actual_emoji_chris} = EmojiService.get_emoji(chris.id, emoji_chris.id)
+      assert actual_emoji_chris == emoji_chris
+
+      {:ok, actual_emoji_chris} = EmojiService.get_emoji(awa.id, emoji_chris.id)
+      assert actual_emoji_chris == emoji_chris
+
+      {:ok, actual_emoji_awa} = EmojiService.get_emoji(awa.id, emoji_awa.id)
+      assert actual_emoji_awa == emoji_awa
+
+      {:ok, actual_emoji_awa} = EmojiService.get_emoji(chris.id, emoji_awa.id)
+      assert actual_emoji_awa == emoji_awa
+    end
+
+    test "Random guy should not see awa emojis", %{
+      emoji_awa: emoji_awa,
+      randomguy: randomguy
+    } do
+      assert {:error, :forbidden} ==
+               EmojiService.get_emoji(randomguy.id, emoji_awa.id)
+    end
+
+    test "Everyone cannot see non-exists emoji", %{
+      chris: chris
+    } do
+      assert {:error, :forbidden} ==
+               EmojiService.get_emoji(chris.id, Ecto.UUID.generate())
+    end
+  end
+
   describe "add_emoji" do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
