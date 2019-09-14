@@ -1,5 +1,6 @@
 defmodule JarmotionWeb.UserSocket do
   use Phoenix.Socket
+  alias Jarmotion.Guardian
 
   # Channels
   channel "user:*", JarmotionWeb.UserChannel
@@ -15,8 +16,16 @@ defmodule JarmotionWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+  def connect(%{"jwt" => jwt}, socket, _connect_info) do
+    with {:ok, user_id, _} <- Guardian.resource_from_token(jwt) do
+      {:ok, assign(socket, :user_id, user_id)}
+    else
+      _ -> :error
+    end
+  end
+
+  def connect(_, _, _) do
+    :error
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
