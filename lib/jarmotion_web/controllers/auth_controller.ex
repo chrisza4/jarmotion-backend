@@ -11,4 +11,8 @@ defmodule JarmotionWeb.AuthController do
       conn |> render("jwt.json", jwt: token)
     end
   end
+
+  def test(conn, _) do
+    send_resp(conn, 200, "Test pass")
+  end
 end

@@ -1,8 +1,8 @@
 defmodule JarmotionWeb.UserSocket do
   use Phoenix.Socket
 
-  ## Channels
-  # channel "room:*", JarmotionWeb.RoomChannel
+  # Channels
+  channel "user:*", JarmotionWeb.UserChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
