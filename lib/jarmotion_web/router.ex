@@ -32,8 +32,12 @@ defmodule JarmotionWeb.Router do
     pipe_through :jwt_authenticated
 
     scope "/emoji" do
+      get "/user/:id", EmojiController, :list
+      get "/user", EmojiController, :list_owner
+      # These will be wired to new endpoint ==============
       get "/:id", EmojiController, :list
       get "/", EmojiController, :list_owner
+      # ==================================================
       post "/", EmojiController, :post
     end
 

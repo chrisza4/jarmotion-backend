@@ -4,6 +4,8 @@ defmodule Jarmotion.Service.EmojiServiceTest do
   alias Jarmotion.Service.EmojiService
   alias Jarmotion.Schemas.Emoji
 
+  import Mock
+
   describe "get_emojis" do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
@@ -69,6 +71,27 @@ defmodule Jarmotion.Service.EmojiServiceTest do
 
       {:ok, actual} = EmojiService.get_emojis(chris.id, chris.id)
       assert Enum.at(actual, 0).id == emoji_chris.id
+    end
+
+    test "Should broadcast emoji changes", %{chris: chris} do
+      with_mocks [
+        {JarmotionWeb.Endpoint, [:passthrough],
+         broadcast: fn _, _, _ ->
+           :ok
+         end}
+      ] do
+        {:ok, emoji_chris} =
+          EmojiService.add_emoji(%Emoji{
+            owner_id: chris.id,
+            type: "heart"
+          })
+
+        assert_called(
+          JarmotionWeb.Endpoint.broadcast("user:#{emoji_chris.owner_id}", "emoji:add", %{
+            id: emoji_chris.id
+          })
+        )
+      end
     end
   end
 end

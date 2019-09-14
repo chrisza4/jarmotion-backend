@@ -133,7 +133,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
           |> Map.put(:owner_id, "null")
           |> Utils.to_keyword_list()
 
-        conn
+        build_conn()
         |> authenticate(%User{id: user.id, email: "chakrit.lj@gmail.com"})
         |> post(Routes.emoji_path(conn, :post, emoji))
         |> json_response(422)
