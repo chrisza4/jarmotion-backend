@@ -13,4 +13,8 @@ defmodule JarmotionWeb.UserChannel do
       {:error, :forbidden} -> {:error, %{reason: "forbidden"}}
     end
   end
+
+  def handle_in("echo", payload, socket) do
+    {:reply, {:ok, %{msg: payload}}, socket}
+  end
 end
