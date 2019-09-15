@@ -15,4 +15,12 @@ defmodule Jarmotion.Service.UserService do
       user -> {:ok, user}
     end
   end
+
+  def validate_in_relationship(user_id_1, user_id_2) do
+    if user_id_1 == user_id_2 or RelationshipRepo.in_relationship?(user_id_1, user_id_2) do
+      :ok
+    else
+      {:error, :forbidden}
+    end
+  end
 end

@@ -1,10 +1,11 @@
 defmodule Jarmotion.Service.EmojiService do
-  alias Jarmotion.Repo.{EmojiRepo, RelationshipRepo}
+  alias Jarmotion.Repo.EmojiRepo
   alias Jarmotion.Schemas.Emoji
+  alias Jarmotion.Service.UserService
 
   def get_emoji(by_user_id, emoji_id) do
     with {:ok, emoji} <- get_with_err(emoji_id),
-         :ok <- validate_can_see(emoji.owner_id, by_user_id) do
+         :ok <- UserService.validate_in_relationship(emoji.owner_id, by_user_id) do
       {:ok, emoji}
     else
       {:error, :not_found} -> {:error, :forbidden}
@@ -13,21 +14,13 @@ defmodule Jarmotion.Service.EmojiService do
   end
 
   def get_emojis(by_user_id, owner_id) do
-    with :ok <- validate_can_see(by_user_id, owner_id) do
+    with :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
       {:ok, EmojiRepo.list_by_owner_id(owner_id)}
     end
   end
 
   def add_emoji(%Emoji{} = emoji) do
     EmojiRepo.insert(emoji) |> broadcast_emoji()
-  end
-
-  defp validate_can_see(user_id_1, user_id_2) do
-    if user_id_1 == user_id_2 or RelationshipRepo.is_friend(user_id_1, user_id_2) do
-      :ok
-    else
-      {:error, :forbidden}
-    end
   end
 
   defp broadcast_emoji({:error, err}), do: {:error, err}
