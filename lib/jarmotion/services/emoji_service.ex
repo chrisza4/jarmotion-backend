@@ -3,6 +3,8 @@ defmodule Jarmotion.Service.EmojiService do
   alias Jarmotion.Schemas.Emoji
   alias Jarmotion.Service.UserService
 
+  require Logger
+
   def get_emoji(by_user_id, emoji_id) do
     with {:ok, emoji} <- get_with_err(emoji_id),
          :ok <- UserService.validate_in_relationship(emoji.owner_id, by_user_id) do
@@ -35,7 +37,10 @@ defmodule Jarmotion.Service.EmojiService do
   end
 
   # Unexpected input
-  defp broadcast_emoji(a), do: a
+  defp broadcast_emoji(a) do
+    Logger.warn("Unexpected input in broadcast emoji. Input #{inspect(a)}")
+    a
+  end
 
   defp get_with_err(id) do
     case EmojiRepo.get(id) do
