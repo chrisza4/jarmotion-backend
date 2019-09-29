@@ -58,7 +58,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
 
       with_mocks [
         {Jarmotion.Service.EmojiService, [],
-         get_emojis: fn user_id, by_user_id ->
+         get_emojis: fn by_user_id, user_id ->
            if(by_user_id == chris_user_id and user_id == awa_user_id) do
              {:ok, emojis}
            else
