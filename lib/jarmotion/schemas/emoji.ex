@@ -53,6 +53,13 @@ defmodule Jarmotion.Schemas.Emoji do
     |> validate_inclusion(:type, @emoji_types)
   end
 
+  @doc ~S"""
+    New Emoji instance from hashmap
+    ## Examples
+
+    iex> new(%{id: "emoji1", type: "heart", owner_id: "user1"})
+    {:ok, %Jarmotion.Schemas.Emoji{id: "emoji1", inserted_at: nil, owner_id: "user1", type: "heart", updated_at: nil}}
+  """
   def new(attrs) do
     changeset = %Emoji{} |> changeset(attrs)
 
