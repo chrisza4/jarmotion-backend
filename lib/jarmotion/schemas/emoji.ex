@@ -3,7 +3,39 @@ defmodule Jarmotion.Schemas.Emoji do
   import Ecto.Changeset
   alias Jarmotion.Schemas.{Emoji, User}
 
-  @emoji_types ["heart"]
+  @emoji_types [
+    "heart",
+    "afraid",
+    "amused",
+    "angry",
+    "anxious",
+    "ashamed",
+    "bashful",
+    "bored",
+    "cold",
+    "confident",
+    "confused",
+    "crazy",
+    "curious",
+    "depressed",
+    "determined",
+    "enraged",
+    "envious",
+    "frightened",
+    "happy",
+    "hot",
+    "indifferent",
+    "jealous",
+    "love",
+    "miserable",
+    "sad",
+    "sick",
+    "sorry",
+    "stupid",
+    "surprised",
+    "suspicious"
+  ]
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @timestamps_opts [type: :utc_datetime]
   schema "emojis" do
