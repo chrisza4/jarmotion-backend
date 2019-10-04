@@ -33,7 +33,8 @@ defmodule Jarmotion.Schemas.Emoji do
     "sorry",
     "stupid",
     "surprised",
-    "suspicious"
+    "suspicious",
+    "withdraw"
   ]
 
   @primary_key {:id, :binary_id, autogenerate: true}
