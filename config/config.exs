@@ -7,6 +7,8 @@
 # General application configuration
 use Mix.Config
 
+config :config_tuples, distillery: false
+
 config :jarmotion,
   ecto_repos: [Jarmotion.Repo],
   timezone: "Asia/Bangkok"

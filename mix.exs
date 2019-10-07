@@ -5,12 +5,17 @@ defmodule Jarmotion.MixProject do
     [
       app: :jarmotion,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: [
+        jarmotion: [
+          config_providers: [{ConfigTuples.Provider, ""}]
+        ]
+      ]
     ]
   end
 
@@ -35,6 +40,8 @@ defmodule Jarmotion.MixProject do
     [
       {:phoenix, "~> 1.4.7"},
       {:phoenix_pubsub, "~> 1.1"},
+      {:config_tuples, "~> 0.4"},
+      {:distillery, "~> 2.1"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},

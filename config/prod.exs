@@ -63,3 +63,11 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+config :jarmotion, JarmotionWeb.Endpoint,
+  http: [:inet6, port: {:system, "PORT"}],
+  # This is critical for ensuring web-sockets properly authorize.
+  url: [host: "localhost", port: {:system, "PORT"}],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  server: true,
+  root: "."
