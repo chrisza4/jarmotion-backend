@@ -3,6 +3,6 @@ defmodule JarmotionWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")
-    assert response(conn, 200) =~ "Jarmotion running test"
+    assert response(conn, 200) =~ "Jarmotion"
   end
 end
