@@ -9,7 +9,7 @@ use Mix.Config
 
 config :jarmotion, Jarmotion.Repo,
   ssl: true,
-  url: {:system, "DATABASE_URL"},
-  pool_size: {:system, "POOL_SIZE", default: 10, type: :integer}
+  url: System.get_env("DATABASE_URL"),
+  pool_size: 10
 
-secret_key_base = {:system, "SECRET_KEY_BASE"}
+secret_key_base = ""
