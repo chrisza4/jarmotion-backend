@@ -38,6 +38,19 @@ environment :prod do
   set(include_src: false)
   set(cookie: :"oRxB.jK1r4|e.b@[C;ku<WG!<kbc*X9QjDA]{q]~k0=/|@j21mM<qI^w6^}M?ZVR")
   set(vm_args: "rel/vm.args")
+
+  set(
+    config_providers: [
+      {Distillery.Releases.Config.Providers.Elixir,
+       ["${RELEASE_ROOT_DIR}/etc/runtime_config.exs"]}
+    ]
+  )
+
+  set(
+    overlays: [
+      {:copy, "rel/runtime_config.exs", "etc/runtime_config.exs"}
+    ]
+  )
 end
 
 # You may define one or more releases in this file.

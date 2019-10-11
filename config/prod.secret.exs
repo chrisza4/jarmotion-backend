@@ -4,12 +4,3 @@
 # recommended and you have to remember to add this
 # file to your .gitignore.
 use Mix.Config
-
-# database_url =
-
-config :jarmotion, Jarmotion.Repo,
-  ssl: true,
-  url: System.get_env("DATABASE_URL"),
-  pool_size: 10
-
-secret_key_base = ""

@@ -63,32 +63,3 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
-
-# config :jarmotion, JarmotionWeb.Endpoint,
-#   https: [
-#     :inet6,
-#     port: 443,
-#     cipher_suite: :strong,
-#     keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-#     certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
-#   ],
-#   # This is critical for ensuring web-sockets properly authorize.
-#   url: [host: "localhost", port: 443],
-#   cache_static_manifest: "priv/static/cache_manifest.json",
-#   server: true,
-#   root: "."
-
-# ==================== For testing release locally =======================
-config :jarmotion, JarmotionWeb.Endpoint,
-  http: [
-    :inet6,
-    port: 80
-    # cipher_suite: :strong,
-    # keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-    # certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
-  ],
-  # This is critical for ensuring web-sockets properly authorize.
-  url: [host: "localhost", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  server: true,
-  root: "."
