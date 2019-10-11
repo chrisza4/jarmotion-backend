@@ -73,7 +73,7 @@ config :jarmotion, JarmotionWeb.Endpoint,
     certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
   ],
   # This is critical for ensuring web-sockets properly authorize.
-  url: [host: "localhost", port: 80],
+  url: [host: "localhost", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true,
   root: "."
