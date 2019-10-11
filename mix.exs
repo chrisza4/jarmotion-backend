@@ -12,9 +12,7 @@ defmodule Jarmotion.MixProject do
       aliases: aliases(),
       deps: deps(),
       releases: [
-        jarmotion: [
-          config_providers: [{ConfigTuples.Provider, ""}]
-        ]
+        jarmotion: []
       ]
     ]
   end
@@ -40,7 +38,6 @@ defmodule Jarmotion.MixProject do
     [
       {:phoenix, "~> 1.4.7"},
       {:phoenix_pubsub, "~> 1.1"},
-      {:config_tuples, "~> 0.4"},
       {:edeliver, ">= 1.6.0"},
       {:distillery, "~> 2.1"},
       {:phoenix_ecto, "~> 4.0"},
