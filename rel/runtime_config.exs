@@ -15,8 +15,8 @@ config :jarmotion, JarmotionWeb.Endpoint,
     :inet6,
     port: 443,
     cipher_suite: :strong,
-    keyfile: {:system, "SOME_APP_SSL_KEY_PATH"},
-    certfile: {:systen, "SOME_APP_SSL_CERT_PATH"}
+    keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
+    certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
   ],
   # This is critical for ensuring web-sockets properly authorize.
   url: [host: "localhost", port: 443],
