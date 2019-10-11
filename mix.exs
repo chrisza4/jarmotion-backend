@@ -4,7 +4,7 @@ defmodule Jarmotion.MixProject do
   def project do
     [
       app: :jarmotion,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.9.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
