@@ -7,6 +7,8 @@ BUILD_AT="/root/app_build"
 PRODUCTION_HOSTS="jarmotion"
 PRODUCTION_USER="root"
 DELIVER_TO="/root/app_release"
+SKIP_MIX_CLEAN="true"
+SKIP_GIT_CLEAN="true"
 
 AUTO_VERSION=commit-count+git-revision+branch-unless-master
 
