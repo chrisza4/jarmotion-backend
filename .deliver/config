@@ -8,7 +8,7 @@ PRODUCTION_HOSTS="jarmotion"
 PRODUCTION_USER="root"
 DELIVER_TO="/root/app_release"
 SKIP_MIX_CLEAN="false"
-SKIP_GIT_CLEAN="false"
+SKIP_GIT_CLEAN="true"
 VERBOSE="true"
 
 AUTO_VERSION=commit-count+git-revision+branch-unless-master
