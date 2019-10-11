@@ -53,10 +53,4 @@ release :jarmotion do
       :runtime_tools
     ]
   )
-
-  set(
-    config_providers: [
-      ConfigTuples.Provider
-    ]
-  )
 end
