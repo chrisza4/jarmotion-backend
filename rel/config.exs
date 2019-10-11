@@ -8,14 +8,13 @@
 |> Enum.map(&Code.eval_file(&1))
 
 use Distillery.Releases.Config,
-    # This sets the default release built by `mix distillery.release`
-    default_release: :default,
-    # This sets the default environment used by `mix distillery.release`
-    default_environment: Mix.env()
+  # This sets the default release built by `mix distillery.release`
+  default_release: :default,
+  # This sets the default environment used by `mix distillery.release`
+  default_environment: Mix.env()
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/config/distillery.html
-
 
 # You may define one or more environments in this file,
 # an environment's settings will override those of a release
@@ -29,16 +28,16 @@ environment :dev do
   # It is recommended that you build with MIX_ENV=prod and pass
   # the --env flag to Distillery explicitly if you want to use
   # dev mode.
-  set dev_mode: true
-  set include_erts: false
-  set cookie: :"5ri3CNS)/I(`z%=HMs%m6.BAB3F;o7l}`oO62:wqmsR5/nST3fn}yD>1JB:OOksL"
+  set(dev_mode: true)
+  set(include_erts: false)
+  set(cookie: :"5ri3CNS)/I(`z%=HMs%m6.BAB3F;o7l}`oO62:wqmsR5/nST3fn}yD>1JB:OOksL")
 end
 
 environment :prod do
-  set include_erts: true
-  set include_src: false
-  set cookie: :"oRxB.jK1r4|e.b@[C;ku<WG!<kbc*X9QjDA]{q]~k0=/|@j21mM<qI^w6^}M?ZVR"
-  set vm_args: "rel/vm.args"
+  set(include_erts: true)
+  set(include_src: false)
+  set(cookie: :"oRxB.jK1r4|e.b@[C;ku<WG!<kbc*X9QjDA]{q]~k0=/|@j21mM<qI^w6^}M?ZVR")
+  set(vm_args: "rel/vm.args")
 end
 
 # You may define one or more releases in this file.
@@ -47,9 +46,17 @@ end
 # will be used by default
 
 release :jarmotion do
-  set version: current_version(:jarmotion)
-  set applications: [
-    :runtime_tools
-  ]
-end
+  set(version: current_version(:jarmotion))
 
+  set(
+    applications: [
+      :runtime_tools
+    ]
+  )
+
+  set(
+    config_providers: [
+      ConfigTuples.Provider
+    ]
+  )
+end
