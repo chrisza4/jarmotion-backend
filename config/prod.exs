@@ -65,9 +65,9 @@ config :logger, level: :info
 import_config "prod.secret.exs"
 
 config :jarmotion, JarmotionWeb.Endpoint,
-  http: [:inet6, port: {:system, "PORT"}],
+  http: [:inet6, port: 80],
   # This is critical for ensuring web-sockets properly authorize.
-  url: [host: "localhost", port: {:system, "PORT"}],
+  url: [host: "localhost", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true,
   root: "."
