@@ -1,6 +1,6 @@
 # Jarmotion
 
-This application use Phoenix server and Elixir
+This application use Phoenix server and Elixir.
 
 To start your Server server:
 
@@ -22,7 +22,7 @@ We use edeliver to deliver upgrade and release to server
 ### Clean release
 
 - `mix edeliver stop production`
-- SSH to server and remove app_build and app_release
+- SSH to server and remove folder app_build and folder app_release
 - Run `./deployments/release_new.sh`
 
 ### Upgrade release

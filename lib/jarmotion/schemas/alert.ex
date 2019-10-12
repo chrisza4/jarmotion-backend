@@ -25,7 +25,7 @@ defmodule Jarmotion.Schemas.Alert do
     alert
     |> cast(attrs, [:id, :status, :owner_id, :to_user_id])
     |> validate_required([:status, :owner_id, :to_user_id])
-    |> validate_inclusion(:status, @alert_status)
+    |> validate_status(:all)
   end
 
   @doc ~S"""
@@ -36,7 +36,7 @@ defmodule Jarmotion.Schemas.Alert do
     {:ok, %Jarmotion.Schemas.Alert{id: "alert1", inserted_at: nil, owner_id: "user1", to_user_id: "user2", status: "created", updated_at: nil}}
   """
   def new(attrs) do
-    changeset = %Alert{} |> changeset(attrs)
+    changeset = %Alert{} |> changeset(attrs) |> validate_status(:new)
 
     if changeset.valid? do
       {:ok, apply_changes(changeset)}
@@ -44,4 +44,7 @@ defmodule Jarmotion.Schemas.Alert do
       {:error, :invalid_input, changeset}
     end
   end
+
+  defp validate_status(alert, :new), do: validate_inclusion(alert, :status, ["created"])
+  defp validate_status(alert, _), do: validate_inclusion(alert, :status, @alert_status)
 end
