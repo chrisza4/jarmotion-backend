@@ -2,7 +2,7 @@ defmodule Jarmotion.Service.AlertServiceTest do
   use JarmotionWeb.ConnCase, async: true
   alias Jarmotion.TestSetup
   alias Jarmotion.Service.AlertService
-  # alias Jarmotion.Schemas.Alert
+  alias Jarmotion.Schemas.Alert
 
   # import Mock
 
@@ -48,97 +48,18 @@ defmodule Jarmotion.Service.AlertServiceTest do
     end
   end
 
-  # describe "get_emoji" do
-  #   setup %{} do
-  #     {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
-  #     {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
-  #     {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
-  #     {:ok, emoji_awa} = TestSetup.create_emoji(awa.id)
-  #     {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
-  #     {:ok, past, 0} = DateTime.from_iso8601("2015-01-23T23:50:07Z")
-  #     TestSetup.create_emoji(chris.id, %{inserted_at: past})
-  #     TestSetup.create_relationship(chris.id, awa.id)
+  describe "Add alert" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      {:ok, awa: awa, chris: chris}
+    end
 
-  #     {:ok,
-  #      chris: chris,
-  #      awa: awa,
-  #      randomguy: randomguy,
-  #      emoji_awa: emoji_awa,
-  #      emoji_chris: emoji_chris}
-  #   end
-
-  #   test "chris and awa should be able to get each other emoji", %{
-  #     chris: chris,
-  #     awa: awa,
-  #     emoji_awa: emoji_awa,
-  #     emoji_chris: emoji_chris
-  #   } do
-  #     {:ok, actual_emoji_chris} = EmojiService.get_emoji(chris.id, emoji_chris.id)
-  #     assert actual_emoji_chris == emoji_chris
-
-  #     {:ok, actual_emoji_chris} = EmojiService.get_emoji(awa.id, emoji_chris.id)
-  #     assert actual_emoji_chris == emoji_chris
-
-  #     {:ok, actual_emoji_awa} = EmojiService.get_emoji(awa.id, emoji_awa.id)
-  #     assert actual_emoji_awa == emoji_awa
-
-  #     {:ok, actual_emoji_awa} = EmojiService.get_emoji(chris.id, emoji_awa.id)
-  #     assert actual_emoji_awa == emoji_awa
-  #   end
-
-  #   test "Random guy should not see awa emojis", %{
-  #     emoji_awa: emoji_awa,
-  #     randomguy: randomguy
-  #   } do
-  #     assert {:error, :forbidden} ==
-  #              EmojiService.get_emoji(randomguy.id, emoji_awa.id)
-  #   end
-
-  #   test "Everyone cannot see non-exists emoji", %{
-  #     chris: chris
-  #   } do
-  #     assert {:error, :forbidden} ==
-  #              EmojiService.get_emoji(chris.id, Ecto.UUID.generate())
-  #   end
-  # end
-
-  # describe "add_emoji" do
-  #   setup %{} do
-  #     {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
-  #     {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
-
-  #     {:ok, chris: chris, emoji_chris: emoji_chris}
-  #   end
-
-  #   test "Should be able to add emoji", %{chris: chris} do
-  #     {:ok, emoji_chris} =
-  #       EmojiService.add_emoji(%Emoji{
-  #         owner_id: chris.id,
-  #         type: "heart"
-  #       })
-
-  #     {:ok, actual} = EmojiService.get_emojis(chris.id, chris.id)
-  #     assert Enum.at(actual, 0).id == emoji_chris.id
-  #   end
-
-  #   test "Should broadcast emoji changes", %{chris: chris} do
-  #     with_mocks [
-  #       {JarmotionWeb.Endpoint, [:passthrough],
-  #        broadcast: fn _, _, _ ->
-  #          :ok
-  #        end}
-  #     ] do
-  #       {:ok, emoji_chris} =
-  #         EmojiService.add_emoji(%Emoji{
-  #           owner_id: chris.id,
-  #           type: "heart"
-  #         })
-
-  #       assert_called(
-  #         JarmotionWeb.Endpoint.broadcast("user:#{emoji_chris.owner_id}", "emoji:add", %{
-  #           id: emoji_chris.id
-  #         })
-  #       )
-  #     end
-  #   end
+    test "If schema correct Should be able to add alert", %{chris: chris, awa: awa} do
+      {:ok, %Alert{} = alert} = AlertService.add_alert(chris.id, awa.id)
+      assert alert.owner_id == chris.id
+      assert alert.to_user_id == awa.id
+      assert alert.status == "created"
+    end
+  end
 end

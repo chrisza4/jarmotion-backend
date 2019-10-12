@@ -4,8 +4,11 @@ defmodule Jarmotion.Service.AlertService do
 
   require Logger
 
-  def create_alert(%Alert{} = _alert) do
-    {:error, :not_implemented}
+  def add_alert(by_user_id, to_user_id) do
+    with {:ok, alert} <-
+           Alert.new(%{owner_id: by_user_id, to_user_id: to_user_id, status: "created"}) do
+      AlertRepo.insert(alert)
+    end
   end
 
   def get_alert(by_user_id, id) do
