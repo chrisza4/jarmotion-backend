@@ -10,5 +10,5 @@ fi
 echo "Building branch ${CURRENT_BRANCH}"
 echo "Upgrade from version ${FROM_VERSION}"
 
-mix edeliver build upgrade --with=$1 --branch=deployment
+mix edeliver build upgrade --with=${FROM_VERSION} --branch=${CURRENT_BRANCH}
 mix edeliver deploy upgrade to production

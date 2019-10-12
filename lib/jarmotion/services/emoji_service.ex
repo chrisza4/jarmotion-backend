@@ -28,11 +28,7 @@ defmodule Jarmotion.Service.EmojiService do
   defp broadcast_emoji({:error, err}), do: {:error, err}
 
   defp broadcast_emoji({:ok, emoji}) do
-    Task.async(fn ->
-      # This might require error handling
-      JarmotionWeb.Endpoint.broadcast("user:#{emoji.owner_id}", "emoji:add", %{id: emoji.id})
-    end)
-
+    JarmotionWeb.Endpoint.broadcast("user:#{emoji.owner_id}", "emoji:add", %{id: emoji.id})
     {:ok, emoji}
   end
 

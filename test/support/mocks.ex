@@ -1,5 +1,5 @@
 defmodule Jarmotion.Mocks do
-  alias Jarmotion.Schemas.{User, Emoji}
+  alias Jarmotion.Schemas.{User, Emoji, Alert}
 
   @user_sample %User{
     id: "59bf0ca9-9865-4a6b-963c-766866fdb6b8",
@@ -32,4 +32,16 @@ defmodule Jarmotion.Mocks do
       owner_id: owner_id,
       type: type
     }
+
+  def alert_newly_created(by_user_id, to_user_id) do
+    {:ok, alert} =
+      Alert.new(%{
+        id: Ecto.UUID.generate(),
+        owner_id: by_user_id,
+        to_user_id: to_user_id,
+        status: "created"
+      })
+
+    alert
+  end
 end

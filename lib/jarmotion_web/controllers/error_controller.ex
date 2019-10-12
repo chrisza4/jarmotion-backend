@@ -7,7 +7,7 @@ defmodule JarmotionWeb.ErrorController do
     conn
     |> put_status(:not_found)
     |> put_view(ErrorView)
-    |> render(:"404")
+    |> render("404.json")
   end
 
   def call(conn, {:error, :unauthorized}) do

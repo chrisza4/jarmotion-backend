@@ -19,6 +19,10 @@ defmodule JarmotionWeb.ErrorView do
     Error.forbidden(message)
   end
 
+  def render("404.json", _) do
+    Error.not_found()
+  end
+
   def render("422.json", %{changeset: changeset}) do
     changeset |> Error.validation_error() |> Error.invalid_input()
   end
