@@ -69,4 +69,47 @@ defmodule Jarmotion.Service.AlertServiceTest do
       end
     end
   end
+
+  describe "list_recent_alerts" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
+      {:ok, randomgirl} = TestSetup.create_user(%{email: "randomgirl@test.com"}, "mypassword")
+      {:ok, alert_awa_chris} = TestSetup.create_alert(awa.id, chris.id)
+      {:ok, alert_chris_awa_1} = TestSetup.create_alert(chris.id, awa.id)
+      {:ok, alert_chris_awa_2} = TestSetup.create_alert(chris.id, awa.id)
+      {:ok, alert_random} = TestSetup.create_alert(randomguy.id, randomgirl.id)
+
+      {:ok,
+       chris: chris,
+       awa: awa,
+       randomguy: randomguy,
+       randomgirl: randomgirl,
+       alert_awa_chris: alert_awa_chris,
+       alert_chris_awa_1: alert_chris_awa_1,
+       alert_chris_awa_2: alert_chris_awa_2,
+       alert_random: alert_random}
+    end
+
+    test "should be able to get alerts I sent and I received recently", %{
+      chris: chris,
+      awa: awa,
+      alert_awa_chris: alert_awa_chris,
+      alert_chris_awa_1: alert_chris_awa_1,
+      alert_chris_awa_2: alert_chris_awa_2
+    } do
+      assert {:ok, alerts} = AlertService.list_recent_alerts(chris.id)
+      assert length(alerts) == 3
+      assert Enum.any?(alerts, &(&1.id == alert_awa_chris.id))
+      assert Enum.any?(alerts, &(&1.id == alert_chris_awa_1.id))
+      assert Enum.any?(alerts, &(&1.id == alert_chris_awa_2.id))
+
+      assert {:ok, alerts} = AlertService.list_recent_alerts(awa.id)
+      assert length(alerts) == 3
+      assert Enum.any?(alerts, &(&1.id == alert_awa_chris.id))
+      assert Enum.any?(alerts, &(&1.id == alert_chris_awa_1.id))
+      assert Enum.any?(alerts, &(&1.id == alert_chris_awa_2.id))
+    end
+  end
 end
