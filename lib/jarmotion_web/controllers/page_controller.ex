@@ -5,7 +5,7 @@ defmodule JarmotionWeb.PageController do
     send_resp(
       conn,
       200,
-      "Jarmotion up and running. Welcome to Jarmotion!!! :-). Developing alert"
+      "Jarmotion up and running. Welcome to Jarmotion!!! :-)"
     )
   end
 end
