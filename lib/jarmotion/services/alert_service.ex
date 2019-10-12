@@ -1,13 +1,16 @@
 defmodule Jarmotion.Service.AlertService do
   alias Jarmotion.Repo.AlertRepo
   alias Jarmotion.Schemas.Alert
+  alias Jarmotion.Service.AlertPostService
 
   require Logger
 
   def add_alert(by_user_id, to_user_id) do
     with {:ok, alert} <-
-           Alert.new(%{owner_id: by_user_id, to_user_id: to_user_id, status: "created"}) do
-      AlertRepo.insert(alert)
+           Alert.new(%{owner_id: by_user_id, to_user_id: to_user_id, status: "created"}),
+         {:ok, alert} <- AlertRepo.insert(alert) do
+      AlertPostService.post_add_alert(alert)
+      {:ok, alert}
     end
   end
 
@@ -21,28 +24,4 @@ defmodule Jarmotion.Service.AlertService do
   defp can_access?(user_id, %Alert{} = alert) do
     alert.owner_id == user_id or alert.to_user_id == user_id
   end
-
-  # defp broadcast_emoji({:error, err}), do: {:error, err}
-
-  # defp broadcast_emoji({:ok, emoji}) do
-  #   Task.async(fn ->
-  #     # This might require error handling
-  #     JarmotionWeb.Endpoint.broadcast("user:#{emoji.owner_id}", "emoji:add", %{id: emoji.id})
-  #   end)
-
-  #   {:ok, emoji}
-  # end
-
-  # # Unexpected input
-  # defp broadcast_emoji(a) do
-  #   Logger.warn("Unexpected input in broadcast emoji. Input #{inspect(a)}")
-  #   a
-  # end
-
-  # defp get_with_err(id) do
-  #   case EmojiRepo.get(id) do
-  #     nil -> {:error, :not_found}
-  #     emoji -> {:ok, emoji}
-  #   end
-  # end
 end

@@ -1,10 +1,10 @@
 defmodule Jarmotion.Service.AlertServiceTest do
   use JarmotionWeb.ConnCase, async: true
   alias Jarmotion.TestSetup
-  alias Jarmotion.Service.AlertService
+  alias Jarmotion.Service.{AlertService, AlertPostService}
   alias Jarmotion.Schemas.Alert
 
-  # import Mock
+  import Mock
 
   describe "get_alert" do
     setup %{} do
@@ -56,10 +56,17 @@ defmodule Jarmotion.Service.AlertServiceTest do
     end
 
     test "If schema correct Should be able to add alert", %{chris: chris, awa: awa} do
-      {:ok, %Alert{} = alert} = AlertService.add_alert(chris.id, awa.id)
+      assert {:ok, %Alert{} = alert} = AlertService.add_alert(chris.id, awa.id)
       assert alert.owner_id == chris.id
       assert alert.to_user_id == awa.id
       assert alert.status == "created"
+    end
+
+    test "Should trigger post_alert", %{chris: chris, awa: awa} do
+      with_mock(AlertPostService, post_add_alert: fn _ -> :ok end) do
+        {:ok, alert} = AlertService.add_alert(chris.id, awa.id)
+        assert_called(AlertPostService.post_add_alert(alert))
+      end
     end
   end
 end
