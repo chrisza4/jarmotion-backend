@@ -1,6 +1,6 @@
 defmodule Jarmotion.TestSetup do
-  alias Jarmotion.Schemas.{User, Relationship}
-  alias Jarmotion.Repo.{UserRepo, EmojiRepo, RelationshipRepo}
+  alias Jarmotion.Schemas.{User, Relationship, Alert}
+  alias Jarmotion.Repo.{UserRepo, EmojiRepo, RelationshipRepo, AlertRepo}
   alias Jarmotion.Mocks
 
   def create_user(%{} = override_info \\ %{}, password \\ "testtest") do
@@ -19,5 +19,16 @@ defmodule Jarmotion.TestSetup do
 
   def create_relationship(user_id_1, user_id_2) do
     %Relationship{user_id_1: user_id_1, user_id_2: user_id_2} |> RelationshipRepo.insert()
+  end
+
+  def create_alert(from_user_id, to_user_id) do
+    {:ok, alert} =
+      Alert.new(%{
+        owner_id: from_user_id,
+        to_user_id: to_user_id,
+        status: "created"
+      })
+
+    AlertRepo.insert(alert)
   end
 end
