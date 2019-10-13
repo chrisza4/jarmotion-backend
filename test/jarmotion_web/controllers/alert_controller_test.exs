@@ -6,7 +6,7 @@ defmodule JarmotionWeb.AlertControllerTest do
   import Mock
 
   describe "GET /alert" do
-    test "Return 200 with alert when user allow to get emoji", %{conn: conn} do
+    test "Return 200 with alert when user allow to get alert", %{conn: conn} do
       chris_user_id = Mocks.user_chris().id
       awa_user_id = Mocks.user_awa().id
       alert = Mocks.alert_newly_created(awa_user_id, chris_user_id)
@@ -70,6 +70,33 @@ defmodule JarmotionWeb.AlertControllerTest do
       |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
       |> post(Routes.alert_path(conn, :post, too_users_ids: "nothing"))
       |> json_response(404)
+    end
+  end
+
+  describe "GET /alerts" do
+    test "Return 200 with list of alerts", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+
+      alerts = [
+        Mocks.alert_newly_created(awa_user_id, chris_user_id),
+        Mocks.alert_newly_created(awa_user_id, chris_user_id)
+      ]
+
+      with_mock(AlertService,
+        list_recent_alerts: fn _ -> {:ok, alerts} end
+      ) do
+        response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.alert_path(conn, :list_recent))
+          |> json_response(200)
+
+        assert length(response) == 2
+        [alert1, alert2] = alerts
+        assert Enum.any?(response, &(&1["id"] == alert1.id))
+        assert Enum.any?(response, &(&1["id"] == alert2.id))
+      end
     end
   end
 end

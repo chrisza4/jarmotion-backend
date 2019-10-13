@@ -13,6 +13,7 @@ defmodule Jarmotion.Service.AlertServiceTest do
       {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
       {:ok, randomgirl} = TestSetup.create_user(%{email: "randomgirl@test.com"}, "mypassword")
       {:ok, alert_awa_chris} = TestSetup.create_alert(awa.id, chris.id)
+
       {:ok, alert_random} = TestSetup.create_alert(randomguy.id, randomgirl.id)
 
       {:ok,
@@ -72,14 +73,17 @@ defmodule Jarmotion.Service.AlertServiceTest do
 
   describe "list_recent_alerts" do
     setup %{} do
+      now = Timex.to_datetime({2019, 5, 5})
+      yesterday = Timex.to_datetime({2019, 5, 4})
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
       {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
       {:ok, randomgirl} = TestSetup.create_user(%{email: "randomgirl@test.com"}, "mypassword")
-      {:ok, alert_awa_chris} = TestSetup.create_alert(awa.id, chris.id)
-      {:ok, alert_chris_awa_1} = TestSetup.create_alert(chris.id, awa.id)
-      {:ok, alert_chris_awa_2} = TestSetup.create_alert(chris.id, awa.id)
-      {:ok, alert_random} = TestSetup.create_alert(randomguy.id, randomgirl.id)
+      {:ok, alert_awa_chris} = TestSetup.create_alert(awa.id, chris.id, now)
+      {:ok, alert_chris_awa_1} = TestSetup.create_alert(chris.id, awa.id, now)
+      {:ok, alert_chris_awa_2} = TestSetup.create_alert(chris.id, awa.id, now)
+      {:ok, _alert_chris_awa_yesterday} = TestSetup.create_alert(chris.id, awa.id, yesterday)
+      {:ok, alert_random} = TestSetup.create_alert(randomguy.id, randomgirl.id, now)
 
       {:ok,
        chris: chris,
@@ -89,7 +93,8 @@ defmodule Jarmotion.Service.AlertServiceTest do
        alert_awa_chris: alert_awa_chris,
        alert_chris_awa_1: alert_chris_awa_1,
        alert_chris_awa_2: alert_chris_awa_2,
-       alert_random: alert_random}
+       alert_random: alert_random,
+       yesterday: yesterday}
     end
 
     test "should be able to get alerts I sent and I received recently", %{
@@ -97,15 +102,16 @@ defmodule Jarmotion.Service.AlertServiceTest do
       awa: awa,
       alert_awa_chris: alert_awa_chris,
       alert_chris_awa_1: alert_chris_awa_1,
-      alert_chris_awa_2: alert_chris_awa_2
+      alert_chris_awa_2: alert_chris_awa_2,
+      yesterday: yesterday
     } do
-      assert {:ok, alerts} = AlertService.list_recent_alerts(chris.id)
+      assert {:ok, alerts} = AlertService.list_recent_alerts(chris.id, yesterday)
       assert length(alerts) == 3
       assert Enum.any?(alerts, &(&1.id == alert_awa_chris.id))
       assert Enum.any?(alerts, &(&1.id == alert_chris_awa_1.id))
       assert Enum.any?(alerts, &(&1.id == alert_chris_awa_2.id))
 
-      assert {:ok, alerts} = AlertService.list_recent_alerts(awa.id)
+      assert {:ok, alerts} = AlertService.list_recent_alerts(awa.id, yesterday)
       assert length(alerts) == 3
       assert Enum.any?(alerts, &(&1.id == alert_awa_chris.id))
       assert Enum.any?(alerts, &(&1.id == alert_chris_awa_1.id))

@@ -21,12 +21,13 @@ defmodule Jarmotion.TestSetup do
     %Relationship{user_id_1: user_id_1, user_id_2: user_id_2} |> RelationshipRepo.insert()
   end
 
-  def create_alert(from_user_id, to_user_id) do
+  def create_alert(from_user_id, to_user_id, inserted_at \\ DateTime.utc_now()) do
     {:ok, alert} =
       Alert.new(%{
         owner_id: from_user_id,
         to_user_id: to_user_id,
-        status: "created"
+        status: "created",
+        inserted_at: inserted_at
       })
 
     AlertRepo.insert(alert)

@@ -12,6 +12,14 @@ defmodule JarmotionWeb.AlertController do
     end
   end
 
+  def list_recent(conn, _params) do
+    by_user_id = current_user_id(conn)
+
+    with {:ok, alerts} <- AlertService.list_recent_alerts(by_user_id) do
+      render(conn, "alerts.json", %{alerts: alerts})
+    end
+  end
+
   def post(conn, %{"to_user_id" => to_user_id}) do
     by_user_id = current_user_id(conn)
 
