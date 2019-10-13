@@ -23,7 +23,7 @@ defmodule Jarmotion.Schemas.Alert do
   @doc false
   def changeset(%Alert{} = alert, attrs) do
     alert
-    |> cast(attrs, [:id, :status, :owner_id, :to_user_id])
+    |> cast(attrs, [:id, :status, :owner_id, :to_user_id, :inserted_at])
     |> validate_required([:status, :owner_id, :to_user_id])
     |> validate_status(:all)
   end

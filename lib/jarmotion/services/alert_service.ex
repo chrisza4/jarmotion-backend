@@ -21,6 +21,13 @@ defmodule Jarmotion.Service.AlertService do
     end
   end
 
+  def list_recent_alerts(by_user_id),
+    do: list_recent_alerts(by_user_id, Timex.subtract(Timex.now(), Timex.Duration.from_days(1)))
+
+  def list_recent_alerts(by_user_id, since) do
+    {:ok, AlertRepo.list_related(by_user_id, since)}
+  end
+
   defp can_access?(user_id, %Alert{} = alert) do
     alert.owner_id == user_id or alert.to_user_id == user_id
   end
