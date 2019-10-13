@@ -16,4 +16,8 @@ defmodule Jarmotion.Repo.AlertRepo do
     )
     |> Repo.all()
   end
+
+  def update_status(%Alert{} = alert, new_status) do
+    alert |> Alert.changeset(%{status: new_status}) |> Repo.update()
+  end
 end

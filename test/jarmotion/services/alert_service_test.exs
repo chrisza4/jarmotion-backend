@@ -118,4 +118,30 @@ defmodule Jarmotion.Service.AlertServiceTest do
       assert Enum.any?(alerts, &(&1.id == alert_chris_awa_2.id))
     end
   end
+
+  describe "ack_alert" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      {:ok, alert_awa_chris} = TestSetup.create_alert(awa.id, chris.id)
+
+      {:ok, chris: chris, awa: awa, alert_awa_chris: alert_awa_chris}
+    end
+
+    test "Should be able to ack alert sent to me", %{
+      chris: chris,
+      alert_awa_chris: alert_awa_chris
+    } do
+      assert {:ok, alert} = AlertService.ack_alert(chris.id, alert_awa_chris.id)
+      assert alert.status == "acknowledged"
+    end
+
+    test "Others should not be able to ack alert", %{awa: awa, alert_awa_chris: alert_awa_chris} do
+      assert {:error, :forbidden} = AlertService.ack_alert(awa.id, alert_awa_chris.id)
+    end
+
+    # test "Should not be able to ack non-exists alert", %{awa: awa, alert_awa_chris: alert_awa_chris} do
+    #   assert {:error, :not_found} = AlertService.ack_alert(awa.id, "random-id")
+    # end
+  end
 end

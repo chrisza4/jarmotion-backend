@@ -41,6 +41,7 @@ defmodule JarmotionWeb.Router do
     scope "/alert" do
       get "/:id", AlertController, :get
       post "/", AlertController, :post
+      post "/:id/ack", AlertController, :post_ack
       get "/", AlertController, :list_recent
     end
 

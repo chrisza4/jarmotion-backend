@@ -99,4 +99,24 @@ defmodule JarmotionWeb.AlertControllerTest do
       end
     end
   end
+
+  describe "POST /alert/:id/ack" do
+    test "return 200 with new alert when success", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+      alert = Mocks.alert_newly_created(awa_user_id, chris_user_id)
+
+      with_mock(AlertService,
+        ack_alert: fn _, _ -> {:ok, alert} end
+      ) do
+        response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> post(Routes.alert_path(conn, :post_ack, alert.id))
+          |> json_response(200)
+
+        assert response["id"] == alert.id
+      end
+    end
+  end
 end

@@ -31,4 +31,16 @@ defmodule JarmotionWeb.AlertController do
   def post(_conn, _) do
     {:error, :not_found}
   end
+
+  def post_ack(conn, %{"id" => alert_id}) do
+    by_user_id = current_user_id(conn)
+
+    with {:ok, alert} <- AlertService.ack_alert(by_user_id, alert_id) do
+      render(conn, "alert.json", %{alert: alert})
+    end
+  end
+
+  def post_ack(_conn, _) do
+    {:error, :not_found}
+  end
 end

@@ -14,6 +14,13 @@ defmodule Jarmotion.Service.AlertService do
     end
   end
 
+  def ack_alert(by_user_id, alert_id) do
+    with {:ok, alert} <- get_alert(by_user_id, alert_id),
+         :ok <- validate_can_ack(by_user_id, alert) do
+      AlertRepo.update_status(alert, "acknowledged")
+    end
+  end
+
   def get_alert(by_user_id, id) do
     case AlertRepo.get(id) do
       nil -> {:error, :not_found}
@@ -30,5 +37,13 @@ defmodule Jarmotion.Service.AlertService do
 
   defp can_access?(user_id, %Alert{} = alert) do
     alert.owner_id == user_id or alert.to_user_id == user_id
+  end
+
+  defp validate_can_ack(user_id, %Alert{} = alert) do
+    if alert.to_user_id == user_id do
+      :ok
+    else
+      {:error, :forbidden}
+    end
   end
 end
