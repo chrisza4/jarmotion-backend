@@ -1,6 +1,6 @@
 defmodule Jarmotion.TestSetup do
-  alias Jarmotion.Schemas.{User, Relationship, Alert}
-  alias Jarmotion.Repo.{UserRepo, EmojiRepo, RelationshipRepo, AlertRepo}
+  alias Jarmotion.Schemas.{User, Relationship, Alert, Device}
+  alias Jarmotion.Repo.{UserRepo, EmojiRepo, RelationshipRepo, AlertRepo, DeviceRepo}
   alias Jarmotion.Mocks
 
   def create_user(%{} = override_info \\ %{}, password \\ "testtest") do
@@ -31,5 +31,10 @@ defmodule Jarmotion.TestSetup do
       })
 
     AlertRepo.insert(alert)
+  end
+
+  def create_device(owner_id, token) do
+    {:ok, device} = Device.new(%{owner_id: owner_id, token: token})
+    DeviceRepo.regis_device(device)
   end
 end
