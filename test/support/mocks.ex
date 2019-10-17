@@ -1,5 +1,5 @@
 defmodule Jarmotion.Mocks do
-  alias Jarmotion.Schemas.{User, Emoji, Alert}
+  alias Jarmotion.Schemas.{User, Emoji, Alert, Device}
 
   @user_sample %User{
     id: "59bf0ca9-9865-4a6b-963c-766866fdb6b8",
@@ -43,5 +43,10 @@ defmodule Jarmotion.Mocks do
       })
 
     alert
+  end
+
+  def device(owner_id, token) do
+    {:ok, device} = Device.new(%{token: token, id: Ecto.UUID.generate(), owner_id: owner_id})
+    device
   end
 end
