@@ -70,4 +70,6 @@ defmodule Jarmotion.Schemas.Emoji do
       {:error, :invalid_input, changeset}
     end
   end
+
+  def emoji_types, do: @emoji_types
 end
