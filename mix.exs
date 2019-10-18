@@ -23,7 +23,7 @@ defmodule Jarmotion.MixProject do
   def application do
     [
       mod: {Jarmotion.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :exponent_server_sdk]
     ]
   end
 
@@ -38,6 +38,7 @@ defmodule Jarmotion.MixProject do
     [
       {:phoenix, "~> 1.4.7"},
       {:phoenix_pubsub, "~> 1.1"},
+      {:exponent_server_sdk, "~> 0.2.0"},
       {:edeliver, ">= 1.6.0"},
       {:distillery, "~> 2.1"},
       {:phoenix_ecto, "~> 4.0"},
