@@ -11,7 +11,11 @@ defmodule Jarmotion.Service.AlertPushService do
         %{
           to: device.token,
           title: "Alert",
-          body: "#{owner.name} just send you an alert!!!"
+          body: "#{owner.name} just send you an alert!!!",
+          data: %{
+            type: "alert",
+            id: alert.id
+          }
         }
       end)
 

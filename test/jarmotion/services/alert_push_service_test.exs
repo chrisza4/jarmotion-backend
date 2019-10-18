@@ -32,7 +32,11 @@ defmodule Jarmotion.Service.AlertPushServiceTest do
             %{
               to: "mytoken",
               title: "Alert",
-              body: "Awa just send you an alert!!!"
+              body: "Awa just send you an alert!!!",
+              data: %{
+                type: "alert",
+                id: alert.id
+              }
             }
           ])
         )
