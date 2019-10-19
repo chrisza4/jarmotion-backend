@@ -1,7 +1,7 @@
 defmodule Jarmotion.Service.EmojiService do
   alias Jarmotion.Repo.EmojiRepo
   alias Jarmotion.Schemas.Emoji
-  alias Jarmotion.Service.UserService
+  alias Jarmotion.Service.{EmojiPostService, UserService}
 
   require Logger
 
@@ -22,20 +22,10 @@ defmodule Jarmotion.Service.EmojiService do
   end
 
   def add_emoji(%Emoji{} = emoji) do
-    EmojiRepo.insert(emoji) |> broadcast_emoji()
-  end
-
-  defp broadcast_emoji({:error, err}), do: {:error, err}
-
-  defp broadcast_emoji({:ok, emoji}) do
-    JarmotionWeb.Endpoint.broadcast("user:#{emoji.owner_id}", "emoji:add", %{id: emoji.id})
-    {:ok, emoji}
-  end
-
-  # Unexpected input
-  defp broadcast_emoji(a) do
-    Logger.warn("Unexpected input in broadcast emoji. Input #{inspect(a)}")
-    a
+    with {:ok, emoji} <- EmojiRepo.insert(emoji) do
+      EmojiPostService.post_add_emoji(emoji)
+      {:ok, emoji}
+    end
   end
 
   defp get_with_err(id) do
