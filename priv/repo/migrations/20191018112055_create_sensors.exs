@@ -7,6 +7,7 @@ defmodule Jarmotion.Repo.Migrations.CreateSensors do
       add :owner_id, references(:users)
       add :emoji_type, :string
       add :threshold, :integer
+      timestamps()
     end
 
     create index("sensors", [:owner_id])
