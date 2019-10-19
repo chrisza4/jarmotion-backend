@@ -35,7 +35,7 @@ defmodule Jarmotion.Service.SensorService do
         end)
       end)
 
-    {:ok, trigger_sensors}
+    trigger_sensors
   end
 
   def send_push_to_sensors(sensors) do
@@ -47,7 +47,7 @@ defmodule Jarmotion.Service.SensorService do
         %{
           to: device.token,
           title: "Alert",
-          body: "Your partner is #{sensor.emoji_type}.",
+          body: "Your partner is currently #{sensor.emoji_type}.",
           data: %{
             type: "sensor",
             id: sensor.id

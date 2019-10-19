@@ -60,7 +60,7 @@ defmodule Jarmotion.Service.SensorServiceTest do
       assert length(users) == 0
 
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
-      {:ok, sensors} = SensorService.list_trigger_sensors(awa.id)
+      sensors = SensorService.list_trigger_sensors(awa.id)
       assert length(sensors) == 1
       assert Enum.at(sensors, 0).owner_id == chris.id
     end
@@ -91,7 +91,7 @@ defmodule Jarmotion.Service.SensorServiceTest do
             %{
               to: "mytoken1",
               title: "Alert",
-              body: "Your partner is enraged.",
+              body: "Your partner is currently enraged.",
               data: %{
                 type: "sensor",
                 id: sensor.id
@@ -100,7 +100,7 @@ defmodule Jarmotion.Service.SensorServiceTest do
             %{
               to: "mytoken2",
               title: "Alert",
-              body: "Your partner is enraged.",
+              body: "Your partner is currently enraged.",
               data: %{
                 type: "sensor",
                 id: sensor.id
