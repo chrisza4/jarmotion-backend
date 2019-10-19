@@ -10,8 +10,4 @@ defmodule JarmotionWeb.DeviceView do
       updated_at: device.updated_at
     }
   end
-
-  def render("success.json", _) do
-    %{ok: true}
-  end
 end

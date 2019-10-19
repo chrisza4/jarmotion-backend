@@ -20,7 +20,9 @@ defmodule JarmotionWeb.DeviceController do
     by_user_id = current_user_id(conn)
 
     with :ok <- DeviceService.revoke_device(by_user_id, token) do
-      render(conn, "success.json")
+      conn
+      |> put_view(JarmotionWeb.SharedView)
+      |> render("success.json")
     end
   end
 

@@ -54,5 +54,11 @@ defmodule JarmotionWeb.Router do
       post "/", DeviceController, :post
       delete "/:token", DeviceController, :delete
     end
+
+    scope "/sensors" do
+      post "/", SensorController, :post
+      get "/", SensorController, :list
+      delete "/", SensorController, :delete
+    end
   end
 end
