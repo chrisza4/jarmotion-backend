@@ -1,6 +1,6 @@
 defmodule Jarmotion.Repo.SensorRepo do
   import Ecto.Query
-  alias Jarmotion.Schemas.{Sensor, User, Relationship, Emoji}
+  alias Jarmotion.Schemas.Sensor
   alias Jarmotion.Repo
 
   def upsert(%Sensor{} = sensor) do
