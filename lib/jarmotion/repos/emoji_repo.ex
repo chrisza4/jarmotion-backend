@@ -22,5 +22,19 @@ defmodule Jarmotion.Repo.EmojiRepo do
     |> Repo.all()
   end
 
+  def count_by_type_today(owner_id) do
+    begin_of_today = Timex.now("Asia/Bangkok") |> Timex.Protocol.beginning_of_day()
+    end_of_today = Timex.now("Asia/Bangkok") |> Timex.Protocol.end_of_day()
+
+    from(e in Emoji,
+      where:
+        e.owner_id == ^owner_id and e.inserted_at >= ^begin_of_today and
+          e.inserted_at <= ^end_of_today,
+      group_by: e.type,
+      select: %{type: e.type, count: count(e)}
+    )
+    |> Repo.all()
+  end
+
   def get(id), do: Repo.get(Emoji, id)
 end

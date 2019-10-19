@@ -38,4 +38,29 @@ defmodule Jarmotion.Service.SensorServiceTest do
       {:error, :not_found} = SensorService.delete_sensor(chris.id, "love")
     end
   end
+
+  describe "list_notifier_ids" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      TestSetup.create_relationship(chris.id, awa.id)
+      {:ok, _} = TestSetup.create_sensor(chris.id, "enraged", 2)
+
+      {:ok, %{chris: chris, awa: awa}}
+    end
+
+    test "Given chris set too enraged to be 2, Should told chris that awa is too enraged", %{
+      awa: awa,
+      chris: chris
+    } do
+      TestSetup.create_emoji(awa.id, %{type: "enraged"})
+      {:ok, users} = SensorService.list_notifier_ids(awa.id)
+      assert length(users) == 0
+
+      TestSetup.create_emoji(awa.id, %{type: "enraged"})
+      {:ok, users} = SensorService.list_notifier_ids(awa.id)
+      assert length(users) == 1
+      assert Enum.at(users, 0) == chris.id
+    end
+  end
 end

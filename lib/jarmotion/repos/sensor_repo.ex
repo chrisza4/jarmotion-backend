@@ -1,6 +1,6 @@
 defmodule Jarmotion.Repo.SensorRepo do
   import Ecto.Query
-  alias Jarmotion.Schemas.Sensor
+  alias Jarmotion.Schemas.{Sensor, User, Relationship, Emoji}
   alias Jarmotion.Repo
 
   def upsert(%Sensor{} = sensor) do
@@ -16,6 +16,14 @@ defmodule Jarmotion.Repo.SensorRepo do
   def list_by_owner(user_id) do
     from(sensor in Sensor,
       where: sensor.owner_id == ^user_id,
+      select: sensor
+    )
+    |> Repo.all()
+  end
+
+  def list_by_owners(user_ids) do
+    from(sensor in Sensor,
+      where: sensor.owner_id in ^user_ids,
       select: sensor
     )
     |> Repo.all()
