@@ -56,8 +56,8 @@ defmodule Jarmotion.Service.SensorServiceTest do
       chris: chris
     } do
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
-      {:ok, users} = SensorService.list_trigger_sensors(awa.id)
-      assert length(users) == 0
+      sensors = SensorService.list_trigger_sensors(awa.id)
+      assert length(sensors) == 0
 
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
       sensors = SensorService.list_trigger_sensors(awa.id)
