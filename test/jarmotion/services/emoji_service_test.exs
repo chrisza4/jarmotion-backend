@@ -6,7 +6,7 @@ defmodule Jarmotion.Service.EmojiServiceTest do
 
   import Mock
 
-  describe "get_emojis" do
+  describe "list_today_emojis" do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
@@ -31,17 +31,17 @@ defmodule Jarmotion.Service.EmojiServiceTest do
       emoji_awa: emoji_awa,
       emoji_chris: emoji_chris
     } do
-      {:ok, actual} = EmojiService.get_emojis(chris.id, awa.id)
+      {:ok, actual} = EmojiService.list_today_emojis(chris.id, awa.id)
       assert length(actual) == 1
       assert Enum.at(actual, 0).id == emoji_awa.id
 
-      {:ok, actual2} = EmojiService.get_emojis(awa.id, chris.id)
+      {:ok, actual2} = EmojiService.list_today_emojis(awa.id, chris.id)
       assert length(actual2) == 1
       assert Enum.at(actual2, 0).id == emoji_chris.id
     end
 
     test "Should be able to get own emojis", %{chris: chris, emoji_chris: emoji_chris} do
-      {:ok, actual2} = EmojiService.get_emojis(chris.id, chris.id)
+      {:ok, actual2} = EmojiService.list_today_emojis(chris.id, chris.id)
       assert length(actual2) == 1
       assert Enum.at(actual2, 0).id == emoji_chris.id
     end
@@ -50,7 +50,7 @@ defmodule Jarmotion.Service.EmojiServiceTest do
       awa: awa,
       randomguy: randomguy
     } do
-      assert {:error, :forbidden} = EmojiService.get_emojis(randomguy.id, awa.id)
+      assert {:error, :forbidden} = EmojiService.list_today_emojis(randomguy.id, awa.id)
     end
   end
 
@@ -123,7 +123,7 @@ defmodule Jarmotion.Service.EmojiServiceTest do
           type: "heart"
         })
 
-      {:ok, actual} = EmojiService.get_emojis(chris.id, chris.id)
+      {:ok, actual} = EmojiService.list_today_emojis(chris.id, chris.id)
       assert Enum.at(actual, 0).id == emoji_chris.id
     end
 

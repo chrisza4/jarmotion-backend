@@ -15,7 +15,7 @@ defmodule Jarmotion.Service.EmojiService do
     end
   end
 
-  def get_emojis(by_user_id, owner_id) do
+  def list_today_emojis(by_user_id, owner_id) do
     with :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
       {:ok, EmojiRepo.list_by_owner_id(owner_id)}
     end

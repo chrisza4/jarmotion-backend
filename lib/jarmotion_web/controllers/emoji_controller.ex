@@ -16,7 +16,7 @@ defmodule JarmotionWeb.EmojiController do
   def list(conn, %{"id" => user_id}) do
     by_user_id = current_user_id(conn)
 
-    with {:ok, emojis} <- EmojiService.get_emojis(by_user_id, user_id) do
+    with {:ok, emojis} <- EmojiService.list_today_emojis(by_user_id, user_id) do
       render(conn, "list.json", emojis: emojis)
     end
   end
@@ -24,7 +24,7 @@ defmodule JarmotionWeb.EmojiController do
   def list_owner(conn, _) do
     by_user_id = current_user_id(conn)
 
-    with {:ok, emojis} <- EmojiService.get_emojis(by_user_id, by_user_id) do
+    with {:ok, emojis} <- EmojiService.list_today_emojis(by_user_id, by_user_id) do
       render(conn, "list.json", emojis: emojis)
     end
   end
