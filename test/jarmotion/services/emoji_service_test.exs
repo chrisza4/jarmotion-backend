@@ -99,12 +99,13 @@ defmodule Jarmotion.Service.EmojiServiceTest do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      TestSetup.create_relationship(chris.id, awa.id)
       {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
+
       {:ok, emoji_awa} = TestSetup.create_emoji(awa.id)
       {:ok, emoji_chris} = TestSetup.create_emoji(chris.id)
       {:ok, past, 0} = DateTime.from_iso8601("2015-01-23T23:50:07Z")
       TestSetup.create_emoji(chris.id, %{inserted_at: past})
-      TestSetup.create_relationship(chris.id, awa.id)
 
       {:ok,
        chris: chris,
@@ -187,6 +188,54 @@ defmodule Jarmotion.Service.EmojiServiceTest do
           })
         )
       end
+    end
+  end
+
+  describe "get_max_by_month" do
+    @date1 "2015-01-23T23:50:07Z"
+    @date2 "2015-01-25T23:50:07Z"
+    @date3 "2015-02-23T23:50:07Z"
+
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      TestSetup.create_relationship(chris.id, awa.id)
+      {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
+      {:ok, past, 0} = DateTime.from_iso8601(@date1)
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "sad", inserted_at: past})
+
+      {:ok, past, 0} = DateTime.from_iso8601(@date2)
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "surprised", inserted_at: past})
+
+      {:ok, past, 0} = DateTime.from_iso8601(@date3)
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "love", inserted_at: past})
+
+      {:ok, chris: chris, awa: awa, randomguy: randomguy}
+    end
+
+    test "Should get max emoji of each day in that month", %{chris: chris, awa: awa} do
+      {:ok, date1, 0} = DateTime.from_iso8601(@date1)
+      {:ok, date2, 0} = DateTime.from_iso8601(@date2)
+
+      {:ok, stats} = EmojiService.get_max_stats_by_month(chris.id, chris.id, 2015, 1)
+      assert length(stats) == 2
+      assert Enum.at(stats, 0).date |> Timex.compare(date1, :day) == 0
+      assert Enum.at(stats, 0).type == "happy"
+
+      assert Enum.at(stats, 1).date |> Timex.compare(date2, :day) == 0
+      assert Enum.at(stats, 1).type == "surprised"
+
+      {:ok, stats2} = EmojiService.get_max_stats_by_month(awa.id, chris.id, 2015, 1)
+      assert stats == stats2
+    end
+
+    test "Should not be able to get stats from non-relationship user", %{
+      randomguy: randomguy,
+      chris: chris
+    } do
+      {:error, :forbidden} = EmojiService.get_max_stats_by_month(randomguy.id, chris.id, 2015, 1)
     end
   end
 end

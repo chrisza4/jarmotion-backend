@@ -37,6 +37,12 @@ defmodule Jarmotion.Service.EmojiService do
     end
   end
 
+  def get_max_stats_by_month(by_user_id, owner_id, year, month) do
+    with :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
+      {:ok, EmojiRepo.max_by_month(owner_id, year, month)}
+    end
+  end
+
   defp get_with_err(id) do
     case EmojiRepo.get(id) do
       nil -> {:error, :not_found}
