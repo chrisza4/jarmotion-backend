@@ -5,6 +5,8 @@ defmodule JarmotionWeb.Error do
   def invalid_input(detail),
     do: %{error_status: "422", error_message: detail}
 
+  def invalid_input(), do: %{error_status: "422", error_message: "Invalid input"}
+
   def not_found, do: %{error_status: "404", error_message: "resource not found"}
 
   def validation_error(changeset) do

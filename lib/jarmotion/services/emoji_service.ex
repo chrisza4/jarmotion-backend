@@ -23,8 +23,7 @@ defmodule Jarmotion.Service.EmojiService do
   end
 
   def list_emojis(by_user_id, owner_id, date) do
-    with {:ok, date} <- Timex.parse(date, "{YYYY}-{0M}-{0D}"),
-         :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
+    with :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
       begginning_of_day = Timex.Protocol.beginning_of_day(date)
       end_of_day = Timex.Protocol.end_of_day(date)
       {:ok, EmojiRepo.list_by_owner_id(owner_id, begginning_of_day, end_of_day)}

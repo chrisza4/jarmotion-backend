@@ -3,6 +3,7 @@ defmodule JarmotionWeb.EmojiControllerTest do
   alias Jarmotion.Schemas.{User}
   alias Jarmotion.Mocks
   alias Jarmotion.Utils
+  use Timex
   import Mock
 
   describe "GET /emoji" do
@@ -123,6 +124,55 @@ defmodule JarmotionWeb.EmojiControllerTest do
 
         assert response["error_message"] == "forbidden"
       end
+    end
+
+    test "Get related people emoji by /emoji/:id?date=xxx", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+
+      emojis = [
+        Mocks.emoji(Mocks.user_awa().id),
+        Mocks.emoji(Mocks.user_awa().id)
+      ]
+
+      {:ok, finding_date} = Timex.parse("2019-01-01", "{YYYY}-{0M}-{0D}")
+
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         list_emojis: fn by_user_id, user_id, date ->
+           if(
+             by_user_id == chris_user_id and user_id == awa_user_id and
+               Timex.compare(date, finding_date) == 0
+           ) do
+             {:ok, emojis}
+           else
+             {:error, :forbidden}
+           end
+         end}
+      ] do
+        emojis_response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.emoji_path(conn, :list, awa_user_id, date: "2019-01-01"))
+          |> json_response(200)
+
+        assert length(emojis_response) == 2
+        assert Enum.at(emojis_response, 0)["id"] == Enum.at(emojis, 0).id
+        assert Enum.at(emojis_response, 1)["id"] == Enum.at(emojis, 1).id
+      end
+    end
+
+    test "return invalid error when date is not correct format", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+
+      response =
+        conn
+        |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+        |> get(Routes.emoji_path(conn, :list, awa_user_id, date: "aSDFzzz"))
+        |> json_response(422)
+
+      assert response["error_message"] == "Invalid date input"
     end
   end
 

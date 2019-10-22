@@ -13,6 +13,20 @@ defmodule JarmotionWeb.EmojiController do
     end
   end
 
+  def list(conn, %{"id" => user_id, "date" => date_string}) do
+    by_user_id = current_user_id(conn)
+
+    case Timex.parse(date_string, "{YYYY}-{0M}-{0D}") do
+      {:ok, date} ->
+        with {:ok, emojis} <- EmojiService.list_emojis(by_user_id, user_id, date) do
+          render(conn, "list.json", emojis: emojis)
+        end
+
+      {:error, _} ->
+        {:error, :invalid_input, %{message: "Invalid date input"}}
+    end
+  end
+
   def list(conn, %{"id" => user_id}) do
     by_user_id = current_user_id(conn)
 

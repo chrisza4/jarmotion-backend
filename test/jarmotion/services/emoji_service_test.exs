@@ -72,21 +72,26 @@ defmodule Jarmotion.Service.EmojiServiceTest do
       awa: awa,
       emoji_chris: emoji_chris
     } do
-      {:ok, actual} = EmojiService.list_emojis(chris.id, chris.id, "2015-01-23")
+      {:ok, date} = Timex.parse("2015-01-23", "{YYYY}-{0M}-{0D}")
+      {:ok, actual} = EmojiService.list_emojis(chris.id, chris.id, date)
 
       assert length(actual) == 1
       assert Enum.at(actual, 0).id == emoji_chris.id
 
-      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, "2015-01-23")
+      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, date)
       assert length(actual) == 1
       assert Enum.at(actual, 0).id == emoji_chris.id
 
-      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, "2015-01-24")
+      {:ok, date_without_emoji} = Timex.parse("2015-01-24", "{YYYY}-{0M}-{0D}")
+      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, date_without_emoji)
       assert length(actual) == 0
     end
 
     test "Other user cannot get emojis", %{chris: chris, randomguy: randomguy} do
-      {:error, :forbidden} = EmojiService.list_emojis(randomguy.id, chris.id, "2015-01-23")
+      {:ok, date} = Timex.parse("2015-01-23", "{YYYY}-{0M}-{0D}")
+
+      assert {:error, :forbidden} ==
+               EmojiService.list_emojis(randomguy.id, chris.id, date)
     end
   end
 
