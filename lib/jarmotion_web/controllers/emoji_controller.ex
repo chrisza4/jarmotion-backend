@@ -2,6 +2,7 @@ defmodule JarmotionWeb.EmojiController do
   use JarmotionWeb, :controller
   alias Jarmotion.Schemas.Emoji
   alias Jarmotion.Service.EmojiService
+  alias Jarmotion.Schemas.Requests.Stats
 
   action_fallback JarmotionWeb.ErrorController
 
@@ -50,6 +51,21 @@ defmodule JarmotionWeb.EmojiController do
          {:ok, new_emoji} <-
            EmojiService.add_emoji(new_emoji) do
       render(conn, "emoji.json", %{emoji: new_emoji})
+    end
+  end
+
+  def stats(conn, params) do
+    by_user_id = current_user_id(conn)
+
+    with {:ok, params} <- Stats.validate_params(params),
+         {:ok, stats} <-
+           EmojiService.get_max_stats_by_month(
+             by_user_id,
+             params.user_id,
+             params.year,
+             params.month
+           ) do
+      render(conn, "stats.json", %{stats: stats})
     end
   end
 end

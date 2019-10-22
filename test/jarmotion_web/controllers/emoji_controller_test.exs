@@ -176,6 +176,46 @@ defmodule JarmotionWeb.EmojiControllerTest do
     end
   end
 
+  describe "get /emoji/stats?userid=x&year=y&month=m" do
+    @mock_stats [
+      %{count: 2, date: ~N[2015-01-23 00:00:00.000000], type: "happy"},
+      %{count: 1, date: ~N[2015-01-25 00:00:00.000000], type: "surprised"}
+    ]
+    test "Should be able to get stats", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+
+      with_mocks [
+        {Jarmotion.Service.EmojiService, [],
+         get_max_stats_by_month: fn _by_user_id, _user_id, _year, _month ->
+           {:ok, @mock_stats}
+         end}
+      ] do
+        stats_response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> get(Routes.emoji_path(conn, :stats, user_id: awa_user_id, year: 2015, month: 1))
+          |> json_response(200)
+
+        assert length(stats_response) == 2
+        assert Enum.at(stats_response, 0)["type"] == "happy"
+        assert Enum.at(stats_response, 0)["date"] == "2015-01-23T00:00:00.000000"
+        assert Enum.at(stats_response, 1)["type"] == "surprised"
+        assert Enum.at(stats_response, 1)["date"] == "2015-01-25T00:00:00.000000"
+      end
+    end
+
+    test "Wrong input, return invalid input error", %{conn: conn} do
+      chris_user_id = Mocks.user_chris().id
+      awa_user_id = Mocks.user_awa().id
+
+      conn
+      |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+      |> get(Routes.emoji_path(conn, :stats, user_id: awa_user_id, yeasssar: 2015, month: 1))
+      |> json_response(422)
+    end
+  end
+
   describe "POST /emoji" do
     test "Should be able to save emoji", %{conn: conn} do
       with_mocks [
