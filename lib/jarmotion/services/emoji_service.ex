@@ -2,6 +2,7 @@ defmodule Jarmotion.Service.EmojiService do
   alias Jarmotion.Repo.EmojiRepo
   alias Jarmotion.Schemas.Emoji
   alias Jarmotion.Service.{EmojiPostService, UserService}
+  use Timex
 
   require Logger
 
@@ -18,6 +19,15 @@ defmodule Jarmotion.Service.EmojiService do
   def list_today_emojis(by_user_id, owner_id) do
     with :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
       {:ok, EmojiRepo.list_by_owner_id(owner_id)}
+    end
+  end
+
+  def list_emojis(by_user_id, owner_id, date) do
+    with {:ok, date} <- Timex.parse(date, "{YYYY}-{0M}-{0D}"),
+         :ok <- UserService.validate_in_relationship(by_user_id, owner_id) do
+      begginning_of_day = Timex.Protocol.beginning_of_day(date)
+      end_of_day = Timex.Protocol.end_of_day(date)
+      {:ok, EmojiRepo.list_by_owner_id(owner_id, begginning_of_day, end_of_day)}
     end
   end
 

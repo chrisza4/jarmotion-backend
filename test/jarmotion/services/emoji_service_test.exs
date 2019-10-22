@@ -54,6 +54,42 @@ defmodule Jarmotion.Service.EmojiServiceTest do
     end
   end
 
+  describe "list_emojis" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+      {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
+      {:ok, _} = TestSetup.create_emoji(chris.id)
+      {:ok, past, 0} = DateTime.from_iso8601("2015-01-23T23:50:07Z")
+      {:ok, emoji_chris} = TestSetup.create_emoji(chris.id, %{inserted_at: past})
+      TestSetup.create_relationship(chris.id, awa.id)
+
+      {:ok, chris: chris, awa: awa, randomguy: randomguy, emoji_chris: emoji_chris}
+    end
+
+    test "Should be able to get emojis of user in relationship", %{
+      chris: chris,
+      awa: awa,
+      emoji_chris: emoji_chris
+    } do
+      {:ok, actual} = EmojiService.list_emojis(chris.id, chris.id, "2015-01-23")
+
+      assert length(actual) == 1
+      assert Enum.at(actual, 0).id == emoji_chris.id
+
+      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, "2015-01-23")
+      assert length(actual) == 1
+      assert Enum.at(actual, 0).id == emoji_chris.id
+
+      {:ok, actual} = EmojiService.list_emojis(awa.id, chris.id, "2015-01-24")
+      assert length(actual) == 0
+    end
+
+    test "Other user cannot get emojis", %{chris: chris, randomguy: randomguy} do
+      {:error, :forbidden} = EmojiService.list_emojis(randomguy.id, chris.id, "2015-01-23")
+    end
+  end
+
   describe "get_emoji" do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
