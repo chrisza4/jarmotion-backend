@@ -1,5 +1,7 @@
 # Jarmotion
 
+Jarmotion is a little application I built for my wedding.
+
 This application use Phoenix server and Elixir.
 
 To start your Server server:
