@@ -24,6 +24,10 @@ config :jarmotion, JarmotionWeb.Endpoint,
   server: true,
   root: "."
 
+config :jarmotion, Jarmotion.Guardian,
+  issuer: "jarmotion",
+  secret_key: System.get_env("JWT_SECRET")
+
 # ==================== For testing release locally =======================
 # config :jarmotion, JarmotionWeb.Endpoint,
 #   http: [
