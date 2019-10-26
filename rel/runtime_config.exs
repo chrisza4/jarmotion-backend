@@ -10,8 +10,6 @@ config :jarmotion, Jarmotion.Repo,
   url: System.get_env("DATABASE_URL"),
   pool_size: 10
 
-IO.inspect(System.get_env("DATABASE_URL"), label: "Connec to database")
-
 config :jarmotion, JarmotionWeb.Endpoint,
   https: [
     :inet6,
@@ -29,8 +27,6 @@ config :jarmotion, JarmotionWeb.Endpoint,
 config :jarmotion, Jarmotion.Guardian,
   issuer: "jarmotion",
   secret_key: System.get_env("JWT_SECRET")
-
-IO.inspect(System.get_env("JWT_SECRET"), label: "Jwt secret")
 
 # ==================== For testing release locally =======================
 # config :jarmotion, JarmotionWeb.Endpoint,
