@@ -202,9 +202,9 @@ defmodule Jarmotion.Service.EmojiServiceTest do
       TestSetup.create_relationship(chris.id, awa.id)
       {:ok, randomguy} = TestSetup.create_user(%{email: "randomguy@test.com"}, "mypassword")
       {:ok, past, 0} = DateTime.from_iso8601(@date1)
-      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
-      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
       {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "sad", inserted_at: past})
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
+      {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "happy", inserted_at: past})
 
       {:ok, past, 0} = DateTime.from_iso8601(@date2)
       {:ok, _} = TestSetup.create_emoji(chris.id, %{type: "surprised", inserted_at: past})
