@@ -23,4 +23,8 @@ defmodule Jarmotion.Service.UserService do
       {:error, :forbidden}
     end
   end
+
+  def update(_user_id, _user_update) do
+    {:error, :not_implemented}
+  end
 end
