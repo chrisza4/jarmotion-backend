@@ -28,6 +28,18 @@ config :jarmotion, Jarmotion.Guardian,
   issuer: "jarmotion",
   secret_key: System.get_env("JWT_SECRET")
 
+config :arc,
+  storage: Arc.Storage.S3,
+  bucket: System.get_env("JARMOTION_BUCKET")
+
+config :ex_aws, :s3, %{
+  access_key_id: System.get_env("AWS_ACCESS_KEY"),
+  secret_access_key: System.get_env("AWS_SECRET"),
+  scheme: "https://",
+  host: "jarmotion.sgp1.digitaloceanspaces.com",
+  region: "nyc3"
+}
+
 # ==================== For testing release locally =======================
 # config :jarmotion, JarmotionWeb.Endpoint,
 #   http: [
