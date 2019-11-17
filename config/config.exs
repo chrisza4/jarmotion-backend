@@ -33,3 +33,7 @@ config :phoenix, :json_library, Jason
 import_config "#{Mix.env()}.exs"
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
+config :arc,
+  # or Arc.Storage.Local
+  storage: Arc.Storage.S3

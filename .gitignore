@@ -38,3 +38,4 @@ npm-debug.log
 .deliver/releases/
 
 *.hidden
+*.secret.exs

@@ -27,9 +27,30 @@ defmodule JarmotionWeb.UserController do
   def change_password(conn, params) do
     user_id = current_user_id(conn)
 
-    with {:ok, _} <-
+    with :ok <-
            UserService.change_password(user_id, params["old_password"], params["new_password"]) do
-      conn |> render("success.json")
+      conn
+      |> put_view(JarmotionWeb.SharedView)
+      |> render("success.json")
     end
   end
+
+  def post_avatar(conn, params) do
+    # IO.inspect(params)
+    # # Avatar.store(params["my-file"]) |> IO.inspect()
+    # upload = %{
+    #   params["my-file"]
+    #   | filename: Ecto.UUID.generate() <> Path.extname(params["my-file"].filename)
+    # }
+
+    # JarmotionWeb.Uploaders.Avatar.store(upload) |> IO.inspect()
+
+    conn
+    |> put_view(JarmotionWeb.SharedView)
+    |> render("success.json")
+  end
+
+  # def register(conn, params) do
+
+  # end
 end

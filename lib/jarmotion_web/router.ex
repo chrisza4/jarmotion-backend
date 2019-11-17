@@ -49,6 +49,7 @@ defmodule JarmotionWeb.Router do
       get "/relationship", UserController, :significant_one
       get "/me", UserController, :me
       post "/me", UserController, :post_me
+      post "/avatar", UserController, :post_avatar
     end
 
     scope "/devices" do

@@ -40,4 +40,7 @@ defmodule Jarmotion.Service.UserService do
       {:error, :forbidden}
     end
   end
+
+  def upload_avatar(user_id, %Plug.Upload{} = upload) do
+  end
 end
