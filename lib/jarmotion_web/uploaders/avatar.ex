@@ -62,11 +62,12 @@ defmodule JarmotionWeb.Uploaders.Avatar do
     ExAws.Config.new(:s3)
     |> ExAws.S3.presigned_url(
       :get,
-      "jarmotion_dev",
+      bucket_name(),
       "uploads/#{version}_#{file_id}",
       expires_in: 604_800
     )
   end
 
   defp stored_file_name(filename), do: Path.basename(filename, Path.extname(filename))
+  defp bucket_name(), do: Application.get_env(:arc, :bucket)
 end
