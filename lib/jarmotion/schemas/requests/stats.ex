@@ -23,7 +23,7 @@ defmodule Jarmotion.Schemas.Requests.Stats do
         year: 1
       }
     }
-    iex> result = Jarmotion.Schemas.Requests.Stats.validate_params(%{year: 1, month: 1, user_id: 'a'})
+    iex> result = Jarmotion.Schemas.Requests.Stats.validate_params(%{yearx: 1, month: 1, user_id: '9a68e358-c106-4480-b7e9-9359f425247a'})
     iex> match?({:error, :invalid_input, _}, result)
     true
   """
@@ -39,8 +39,7 @@ defmodule Jarmotion.Schemas.Requests.Stats do
 
   defp changeset(struct, attrs) do
     struct
-    |> cast(attrs, [:year, :month, :user_id])
-    |> validate_required([:year, :month, :user_id])
+    |> ChangesetHelpers.cast_and_required(attrs, [:year, :month, :user_id])
     |> ChangesetHelpers.validate_uuid(:user_id)
   end
 end
