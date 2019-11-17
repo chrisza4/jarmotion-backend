@@ -35,19 +35,22 @@ defmodule JarmotionWeb.UserController do
     end
   end
 
-  def post_avatar(conn, params) do
-    # IO.inspect(params)
-    # # Avatar.store(params["my-file"]) |> IO.inspect()
-    # upload = %{
-    #   params["my-file"]
-    #   | filename: Ecto.UUID.generate() <> Path.extname(params["my-file"].filename)
-    # }
+  def post_avatar(conn, %{"avatar" => avatar}) do
+    with {:ok, user} <- UserService.upload_avatar(current_user_id(conn), avatar) do
+      conn |> render("user.json", %{user: user})
+    end
+  end
 
-    # JarmotionWeb.Uploaders.Avatar.store(upload) |> IO.inspect()
+  def get_avatar(conn, %{"id" => avatar_id}) do
+    with {:ok, url} <- JarmotionWeb.Uploaders.Avatar.get_original_url(avatar_id) do
+      redirect(conn, external: url)
+    end
+  end
 
-    conn
-    |> put_view(JarmotionWeb.SharedView)
-    |> render("success.json")
+  def get_thumb_avatar(conn, %{"id" => avatar_id}) do
+    with {:ok, url} <- JarmotionWeb.Uploaders.Avatar.get_thumb_url(avatar_id) do
+      redirect(conn, external: url)
+    end
   end
 
   # def register(conn, params) do

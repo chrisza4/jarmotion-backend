@@ -69,7 +69,7 @@ defmodule JarmotionWeb.UserControllerTest do
         {Jarmotion.Service.UserService, [:passthrough],
          update: fn user_id, user_info ->
            if user_id == chris_user_id do
-             {:ok, %{id: user_id, email: user_info.email, name: user_info.name}}
+             {:ok, %{id: user_id, email: user_info.email, name: user_info.name, photo_id: nil}}
            else
              {:error, :forbidden}
            end

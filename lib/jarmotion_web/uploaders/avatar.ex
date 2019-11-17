@@ -26,8 +26,8 @@ defmodule JarmotionWeb.Uploaders.Avatar do
 
   # Override the persisted filenames:
   def filename(version, {file, _}) do
-    file_name = Path.basename(file.file_name, Path.extname(file.file_name))
-    "#{file_name}_#{version}"
+    file_name = stored_file_name(file.file_name)
+    "#{version}_#{file_name}"
   end
 
   # Override the storage directory:
@@ -54,7 +54,8 @@ defmodule JarmotionWeb.Uploaders.Avatar do
   end
 
   def get_thumb_url(file_id) do
-    get_file_url(file_id, "thumb")
+    (Path.basename(file_id, Path.extname(file_id)) <> ".png")
+    |> get_file_url("thumb")
   end
 
   defp get_file_url(file_id, version) do
@@ -66,4 +67,6 @@ defmodule JarmotionWeb.Uploaders.Avatar do
       expires_in: 604_800
     )
   end
+
+  defp stored_file_name(filename), do: Path.basename(filename, Path.extname(filename))
 end
