@@ -2,6 +2,7 @@ defmodule Jarmotion.Service.UserServiceTest do
   use JarmotionWeb.ConnCase, async: true
   alias Jarmotion.TestSetup
   alias Jarmotion.Service.UserService
+  alias Jarmotion.Schemas.Requests.UserUpdate
 
   describe "get_users_in_relationship" do
     setup %{} do
@@ -22,6 +23,25 @@ defmodule Jarmotion.Service.UserServiceTest do
 
       {:ok, list} = UserService.get_users_in_relationship(awa.id)
       assert list == [chris]
+    end
+  end
+
+  describe "update" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+
+      {:ok, chris: chris}
+    end
+
+    test "should be able to update", %{chris: chris} do
+      {:ok, update_result} =
+        UserService.update(chris.id, %UserUpdate{email: "new@email.com", name: "newname"})
+
+      assert update_result.email == "new@email.com"
+      {:ok, new_chris} = UserService.get(chris.id)
+      assert new_chris.email == "new@email.com"
+      assert new_chris.id == chris.id
+      assert new_chris.name == "newname"
     end
   end
 end

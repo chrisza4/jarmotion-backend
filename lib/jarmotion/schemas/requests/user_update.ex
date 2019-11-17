@@ -4,6 +4,7 @@ defmodule Jarmotion.Schemas.Requests.UserUpdate do
   alias Jarmotion.Schemas.Requests.UserUpdate
   alias Jarmotion.Schemas.ChangesetHelpers
 
+  @primary_key false
   embedded_schema do
     field :email, :string
     field :name, :string

@@ -24,7 +24,7 @@ defmodule Jarmotion.Service.UserService do
     end
   end
 
-  def update(_user_id, _user_update) do
-    {:error, :not_implemented}
+  def update(user_id, user_update) do
+    UserRepo.update(user_id, user_update)
   end
 end
