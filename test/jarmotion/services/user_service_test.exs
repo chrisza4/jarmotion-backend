@@ -3,6 +3,7 @@ defmodule Jarmotion.Service.UserServiceTest do
   alias Jarmotion.TestSetup
   alias Jarmotion.Service.UserService
   alias Jarmotion.Schemas.Requests.UserUpdate
+  alias Jarmotion.Service.AuthService
 
   describe "get_users_in_relationship" do
     setup %{} do
@@ -42,6 +43,23 @@ defmodule Jarmotion.Service.UserServiceTest do
       assert new_chris.email == "new@email.com"
       assert new_chris.id == chris.id
       assert new_chris.name == "newname"
+    end
+  end
+
+  describe "change_password" do
+    setup %{} do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+
+      {:ok, chris: chris}
+    end
+
+    test "should be able to change password if old password is correct", %{chris: chris} do
+      assert :ok == UserService.change_password(chris.id, "mypassword", "new")
+      assert {:ok, _} = AuthService.login_for_user("chris@test.com", "new")
+    end
+
+    test "should not be able to change password if old password is incorrect", %{chris: chris} do
+      assert {:error, :forbidden} == UserService.change_password(chris.id, "xxx", "new")
     end
   end
 end

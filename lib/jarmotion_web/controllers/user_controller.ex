@@ -23,4 +23,13 @@ defmodule JarmotionWeb.UserController do
       conn |> render("user.json", %{user: user})
     end
   end
+
+  def change_password(conn, params) do
+    user_id = current_user_id(conn)
+
+    with {:ok, _} <-
+           UserService.change_password(user_id, params["old_password"], params["new_password"]) do
+      conn |> render("success.json")
+    end
+  end
 end

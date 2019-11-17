@@ -24,7 +24,20 @@ defmodule Jarmotion.Service.UserService do
     end
   end
 
-  def update(user_id, user_update) do
+  def update(user_id, %_{} = user_update), do: update(user_id, Map.from_struct(user_update))
+
+  def update(user_id, %{} = user_update) do
     UserRepo.update(user_id, user_update)
+  end
+
+  def change_password(user_id, old_password, new_password) do
+    user = UserRepo.get(user_id)
+
+    if user != nil and Bcrypt.verify_pass(old_password, user.password) do
+      {:ok, _} = UserRepo.update(user_id, %{password: Bcrypt.hash_pwd_salt(new_password)})
+      :ok
+    else
+      {:error, :forbidden}
+    end
   end
 end
