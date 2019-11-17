@@ -10,6 +10,23 @@ defmodule Jarmotion.Schemas.Requests.Stats do
     field :user_id, :binary_id
   end
 
+  @doc ~S"""
+    Validate and return stats from map
+
+    Example:
+    iex> Jarmotion.Schemas.Requests.Stats.validate_params(%{year: 1, month: 1, user_id: "9a68e358-c106-4480-b7e9-9359f425247a"})
+    {:ok,
+      %Jarmotion.Schemas.Requests.Stats{
+        id: nil,
+        month: 1,
+        user_id: "9a68e358-c106-4480-b7e9-9359f425247a",
+        year: 1
+      }
+    }
+    iex> result = Jarmotion.Schemas.Requests.Stats.validate_params(%{yearx: 1, month: 1, user_id: '9a68e358-c106-4480-b7e9-9359f425247a'})
+    iex> match?({:error, :invalid_input, _}, result)
+    true
+  """
   def validate_params(params) do
     params_changeset = changeset(%Stats{}, params)
 
@@ -20,10 +37,9 @@ defmodule Jarmotion.Schemas.Requests.Stats do
     end
   end
 
-  defp changeset(struct, params) do
+  defp changeset(struct, attrs) do
     struct
-    |> cast(params, [:year, :month, :user_id])
-    |> validate_required([:year, :month, :user_id])
+    |> ChangesetHelpers.cast_and_required(attrs, [:year, :month, :user_id])
     |> ChangesetHelpers.validate_uuid(:user_id)
   end
 end

@@ -9,4 +9,8 @@ defmodule Jarmotion.Schemas.ChangesetHelpers do
       end
     end)
   end
+
+  def cast_and_required(struct, attrs, fields) do
+    struct |> cast(attrs, fields) |> validate_required(fields)
+  end
 end

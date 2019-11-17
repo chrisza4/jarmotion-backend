@@ -1,5 +1,6 @@
 defmodule Jarmotion.Service.UserService do
   alias Jarmotion.Repo.{RelationshipRepo, UserRepo}
+  alias JarmotionWeb.Uploaders.Avatar
 
   def get_users_in_relationship(owner_id) do
     {:ok,
@@ -22,5 +23,37 @@ defmodule Jarmotion.Service.UserService do
     else
       {:error, :forbidden}
     end
+  end
+
+  def update(user_id, %_{} = user_update), do: update(user_id, Map.from_struct(user_update))
+
+  def update(user_id, %{} = user_update) do
+    UserRepo.update_by_id(user_id, user_update)
+  end
+
+  def change_password(user_id, old_password, new_password) do
+    user = UserRepo.get(user_id)
+
+    if user != nil and Bcrypt.verify_pass(old_password, user.password) do
+      {:ok, _} = UserRepo.update_by_id(user_id, %{password: Bcrypt.hash_pwd_salt(new_password)})
+      :ok
+    else
+      {:error, :forbidden}
+    end
+  end
+
+  def upload_avatar(user_id, %Plug.Upload{} = upload) do
+    with {:ok, user} <- get(user_id),
+         {:ok, file_id} <- generate_upload(upload) |> Avatar.store() do
+      IO.inspect(file_id, label: "AAA")
+      UserRepo.update(user, %{photo_id: file_id})
+    end
+  end
+
+  defp generate_upload(%Plug.Upload{} = request) do
+    %{
+      request
+      | filename: Ecto.UUID.generate() <> Path.extname(request.filename)
+    }
   end
 end

@@ -78,3 +78,5 @@ config :phoenix, :plug_init_mode, :runtime
 config :jarmotion, Jarmotion.Guardian,
   issuer: "jarmotion",
   secret_key: "kVNx2q5Z9TBT2aLGSWe+0GQ4soQtne98L0PY2t+cTGRwqGWByepADun4NRYwNF/g"
+
+import_config "dev.secret.exs"

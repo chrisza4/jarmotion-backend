@@ -59,4 +59,37 @@ defmodule JarmotionWeb.UserControllerTest do
       end
     end
   end
+
+  describe "POST /users/me" do
+    test "Edit my profile", %{conn: conn} do
+      chris = Mocks.user_chris()
+      chris_user_id = Mocks.user_chris().id
+
+      with_mocks [
+        {Jarmotion.Service.UserService, [:passthrough],
+         update: fn user_id, user_info ->
+           if user_id == chris_user_id do
+             {:ok, %{id: user_id, email: user_info.email, name: user_info.name, photo_id: nil}}
+           else
+             {:error, :forbidden}
+           end
+         end}
+      ] do
+        response =
+          conn
+          |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
+          |> post(
+            Routes.user_path(conn, :post_me,
+              email: "chakritX@gmail.com",
+              name: "Chakrit"
+            )
+          )
+          |> json_response(200)
+
+        assert response["id"] == chris.id
+        assert response["email"] == "chakritX@gmail.com"
+        assert response["name"] == "Chakrit"
+      end
+    end
+  end
 end

@@ -5,7 +5,8 @@ defmodule JarmotionWeb.UserView do
     %{
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      photo_id: user.photo_id
     }
   end
 

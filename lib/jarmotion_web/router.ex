@@ -27,7 +27,6 @@ defmodule JarmotionWeb.Router do
   scope "/api", JarmotionWeb do
     pipe_through :api
     post "/login", AuthController, :login
-    # get "/test", AuthController, :test
 
     pipe_through :jwt_authenticated
 
@@ -49,6 +48,10 @@ defmodule JarmotionWeb.Router do
     scope "/users" do
       get "/relationship", UserController, :significant_one
       get "/me", UserController, :me
+      post "/me", UserController, :post_me
+      get "/avatar/:id", UserController, :get_avatar
+      get "/avatar/thumb/:id", UserController, :get_thumb_avatar
+      post "/avatar", UserController, :post_avatar
     end
 
     scope "/devices" do

@@ -45,7 +45,6 @@ defmodule Jarmotion.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
@@ -53,8 +52,15 @@ defmodule Jarmotion.MixProject do
       {:guardian, "~> 1.0"},
       {:tzdata, "~> 1.0.0"},
       {:timex, "~> 3.5"},
+      {:arc, "~> 0.11.0"},
+      {:ex_aws, "~> 2.0"},
+      {:ex_aws_s3, "~> 2.0.2"},
+      {:hackney, "~> 1.6"},
+      {:poison, "~> 3.1"},
+      {:sweet_xml, "~> 0.6"},
       {:mock, "~> 0.3.0", only: :test},
-      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
+      {:phoenix_live_reload, "~> 1.2", only: :dev}
     ]
   end
 
