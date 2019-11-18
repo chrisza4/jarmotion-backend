@@ -16,6 +16,6 @@ defmodule Jarmotion.Repo.UserRepo do
   end
 
   def update(user, updates) do
-    User.changeset(user, updates) |> IO.inspect() |> Repo.update()
+    User.changeset(user, updates) |> Repo.update()
   end
 end

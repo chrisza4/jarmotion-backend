@@ -21,6 +21,16 @@ defmodule Jarmotion.Schemas.User do
     |> unique_constraint(:id, name: :users_pkey)
   end
 
+  def new(attrs) do
+    attrs = Map.put(attrs, :password, Bcrypt.hash_pwd_salt(attrs.password))
+
+    %User{}
+    |> cast(attrs, [:id, :email, :password, :name, :photo_id])
+    |> validate_required([:email, :password, :name])
+    |> unique_constraint(:email, name: :users_email_index)
+    |> unique_constraint(:id, name: :users_pkey)
+  end
+
   def to_user_info(%User{} = user) do
     %UserInfo{id: user.id, email: user.email}
   end
