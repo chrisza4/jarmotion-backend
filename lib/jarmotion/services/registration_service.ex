@@ -10,7 +10,7 @@ defmodule Jarmotion.Service.RegistrationService do
     |> RegistrationRepo.insert()
   end
 
-  def register(code, user_info) do
+  def register(code, %{} = user_info) do
     registration = RegistrationRepo.find_unregister_code(code)
     registered_user = UserRepo.get_by_email(user_info.email)
 
@@ -22,13 +22,14 @@ defmodule Jarmotion.Service.RegistrationService do
         {:error, :duplicate}
 
       true ->
-        Repo.transaction(fn ->
-          with {:ok, user} <-
-                 User.new(user_info) |> UserRepo.insert() do
-            RegistrationRepo.register_for_user_id(registration, user.id)
-            user
-          end
-        end)
+        with {:ok, user} <- User.new(user_info) do
+          Repo.transaction(fn ->
+            with {:ok, user} <- UserRepo.insert(user) do
+              RegistrationRepo.register_for_user_id(registration, user.id)
+              user
+            end
+          end)
+        end
     end
   end
 end

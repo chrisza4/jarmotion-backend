@@ -38,6 +38,13 @@ defmodule JarmotionWeb.ErrorController do
     |> render("422.json", %{message: message})
   end
 
+  def call(conn, {:error, :invalid_input}) do
+    conn
+    |> put_status(422)
+    |> put_view(ErrorView)
+    |> render("422.json", %{message: "Invalid input"})
+  end
+
   def call(conn, {:error, :invalid_input, changeset}) do
     conn
     |> put_status(422)

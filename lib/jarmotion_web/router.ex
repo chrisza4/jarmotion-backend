@@ -30,6 +30,7 @@ defmodule JarmotionWeb.Router do
   scope "/api", JarmotionWeb do
     pipe_through :api
     post "/login", AuthController, :login
+    post "/register", UserController, :post_register
 
     pipe_through :jwt_authenticated
 

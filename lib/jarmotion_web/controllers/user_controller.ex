@@ -1,7 +1,8 @@
 defmodule JarmotionWeb.UserController do
   use JarmotionWeb, :controller
-  alias Jarmotion.Service.UserService
+  alias Jarmotion.Service.{UserService, RegistrationService}
   alias Jarmotion.Schemas.Requests.UserUpdate
+  alias Jarmotion.Guardian
 
   action_fallback JarmotionWeb.ErrorController
 
@@ -53,7 +54,21 @@ defmodule JarmotionWeb.UserController do
     end
   end
 
-  # def register(conn, params) do
+  def get_thumb_avatar(_, _) do
+    {:error, :invalid_input}
+  end
 
-  # end
+  def post_register(conn, %{"code" => code, "user" => user}) do
+    user = user |> Map.new(fn {k, v} -> {String.to_atom(k), v} end)
+
+    with {:ok, user} <- RegistrationService.register(code, user),
+         {:ok, token, _} <-
+           Guardian.encode_and_sign(user) do
+      conn |> put_view(JarmotionWeb.AuthView) |> render("jwt.json", jwt: token)
+    end
+  end
+
+  def post_register(_, _) do
+    {:error, :invalid_input}
+  end
 end
