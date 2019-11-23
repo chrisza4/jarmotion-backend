@@ -62,4 +62,28 @@ defmodule Jarmotion.Service.UserServiceTest do
       assert {:error, :forbidden} == UserService.change_password(chris.id, "xxx", "new")
     end
   end
+
+  describe "add_relationship" do
+    test "should be able to add user in relationship" do
+      {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
+
+      assert :ok == UserService.add_relationship(chris.id, awa.id)
+
+      {:ok, list} = UserService.get_users_in_relationship(chris.id)
+      assert list == [awa]
+      {:ok, list} = UserService.get_users_in_relationship(awa.id)
+      assert list == [chris]
+    end
+
+    test "cannot add user who already in relationship" do
+      {:ok, guy1} = TestSetup.create_user(%{email: "guy1@test.com"}, "mypassword")
+      {:ok, girl1} = TestSetup.create_user(%{email: "girt1@test.com"}, "mypassword")
+      {:ok, another} = TestSetup.create_user(%{email: "another@test.com"}, "mypassword")
+
+      assert :ok == UserService.add_relationship(guy1.id, girl1.id)
+      assert {:error, :invalid_input} == UserService.add_relationship(another.id, guy1.id)
+      assert {:error, :invalid_input} == UserService.add_relationship(another.id, girl1.id)
+    end
+  end
 end

@@ -1,5 +1,6 @@
 defmodule Jarmotion.Service.UserService do
   alias Jarmotion.Repo.{RelationshipRepo, UserRepo}
+  alias Jarmotion.Schemas.Relationship
   alias JarmotionWeb.Uploaders.Avatar
 
   def get_users_in_relationship(owner_id) do
@@ -14,6 +15,16 @@ defmodule Jarmotion.Service.UserService do
     case user do
       nil -> {:error, :not_found}
       user -> {:ok, user}
+    end
+  end
+
+  def add_relationship(user_id_1, user_id_2) do
+    if RelationshipRepo.in_relationship?(user_id_1) or
+         RelationshipRepo.in_relationship?(user_id_2) do
+      {:error, :invalid_input}
+    else
+      RelationshipRepo.insert(%Relationship{user_id_1: user_id_1, user_id_2: user_id_2})
+      :ok
     end
   end
 
