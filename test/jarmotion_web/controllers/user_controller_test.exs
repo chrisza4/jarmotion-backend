@@ -23,7 +23,7 @@ defmodule JarmotionWeb.UserControllerTest do
         response =
           conn
           |> authenticate(%User{id: chris_user_id, email: "chakrit.lj@gmail.com"})
-          |> get(Routes.user_path(conn, :significant_one))
+          |> get(Routes.user_path(conn, :lover))
           |> json_response(200)
 
         assert length(response) == 2

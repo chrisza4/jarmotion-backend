@@ -6,7 +6,7 @@ defmodule JarmotionWeb.UserController do
 
   action_fallback JarmotionWeb.ErrorController
 
-  def significant_one(conn, _params) do
+  def lover(conn, _params) do
     with {:ok, users} <- UserService.get_users_in_relationship(current_user_id(conn)) do
       conn |> render("list.json", %{users: users})
     end
@@ -24,6 +24,18 @@ defmodule JarmotionWeb.UserController do
       conn |> render("user.json", %{user: user})
     end
   end
+
+  def post_lover(conn, %{"user_id" => lover_id}) do
+    user_id = current_user_id(conn)
+
+    with :ok <- UserService.add_relationship(lover_id, user_id) do
+      conn
+      |> put_view(JarmotionWeb.SharedView)
+      |> render("success.json")
+    end
+  end
+
+  def post_lover(_, _), do: {:error, :invalid_input}
 
   def change_password(conn, params) do
     user_id = current_user_id(conn)

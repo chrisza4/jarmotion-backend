@@ -50,7 +50,8 @@ defmodule JarmotionWeb.Router do
     end
 
     scope "/users" do
-      get "/relationship", UserController, :significant_one
+      get "/relationship", UserController, :lover
+      post "/relationship", UserController, :post_lover
       get "/me", UserController, :me
       post "/me", UserController, :post_me
       post "/avatar", UserController, :post_avatar
