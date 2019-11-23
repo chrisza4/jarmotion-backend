@@ -85,5 +85,10 @@ defmodule Jarmotion.Service.UserServiceTest do
       assert {:error, :invalid_input} == UserService.add_relationship(another.id, guy1.id)
       assert {:error, :invalid_input} == UserService.add_relationship(another.id, girl1.id)
     end
+
+    test "cannot add user into inexists user" do
+      {:ok, guy1} = TestSetup.create_user(%{email: "guy1@test.com"}, "mypassword")
+      assert {:error, :not_found} == UserService.add_relationship(guy1.id, Ecto.UUID.generate())
+    end
   end
 end

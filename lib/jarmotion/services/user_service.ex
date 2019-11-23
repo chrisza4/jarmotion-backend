@@ -19,12 +19,15 @@ defmodule Jarmotion.Service.UserService do
   end
 
   def add_relationship(user_id_1, user_id_2) do
-    if RelationshipRepo.in_relationship?(user_id_1) or
-         RelationshipRepo.in_relationship?(user_id_2) do
-      {:error, :invalid_input}
-    else
+    with {:user, user1} when user1 != nil <- {:user, UserRepo.get(user_id_1)},
+         {:user, user2} when user2 != nil <- {:user, UserRepo.get(user_id_2)},
+         {:relationship, false} <- {:relationship, RelationshipRepo.in_relationship?(user_id_1)},
+         {:relationship, false} <- {:relationship, RelationshipRepo.in_relationship?(user_id_2)} do
       RelationshipRepo.insert(%Relationship{user_id_1: user_id_1, user_id_2: user_id_2})
       :ok
+    else
+      {:user, _} -> {:error, :not_found}
+      {:relationship, _} -> {:error, :invalid_input}
     end
   end
 
