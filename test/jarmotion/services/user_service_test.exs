@@ -68,7 +68,9 @@ defmodule Jarmotion.Service.UserServiceTest do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
 
-      assert :ok == UserService.add_relationship(chris.id, awa.id)
+      assert {:ok, user} = UserService.add_relationship(chris.id, awa.id)
+      assert user.id == awa.id
+      assert user.email == awa.email
 
       {:ok, list} = UserService.get_users_in_relationship(chris.id)
       assert list == [awa]
@@ -81,7 +83,7 @@ defmodule Jarmotion.Service.UserServiceTest do
       {:ok, girl1} = TestSetup.create_user(%{email: "girt1@test.com"}, "mypassword")
       {:ok, another} = TestSetup.create_user(%{email: "another@test.com"}, "mypassword")
 
-      assert :ok == UserService.add_relationship(guy1.id, girl1.id)
+      assert {:ok, _} = UserService.add_relationship(guy1.id, girl1.id)
       assert {:error, :invalid_input} == UserService.add_relationship(another.id, guy1.id)
       assert {:error, :invalid_input} == UserService.add_relationship(another.id, girl1.id)
     end

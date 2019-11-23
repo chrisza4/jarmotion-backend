@@ -24,7 +24,7 @@ defmodule Jarmotion.Service.UserService do
          {:relationship, false} <- {:relationship, RelationshipRepo.in_relationship?(user_id_1)},
          {:relationship, false} <- {:relationship, RelationshipRepo.in_relationship?(user_id_2)} do
       RelationshipRepo.insert(%Relationship{user_id_1: user_id_1, user_id_2: user_id_2})
-      :ok
+      {:ok, user2}
     else
       {:user, _} -> {:error, :not_found}
       {:relationship, _} -> {:error, :invalid_input}
