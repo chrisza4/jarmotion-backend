@@ -28,10 +28,8 @@ defmodule JarmotionWeb.UserController do
   def post_lover(conn, %{"user_id" => lover_id}) do
     user_id = current_user_id(conn)
 
-    with :ok <- UserService.add_relationship(lover_id, user_id) do
-      conn
-      |> put_view(JarmotionWeb.SharedView)
-      |> render("success.json")
+    with {:ok, user} <- UserService.add_relationship(lover_id, user_id) do
+      conn |> render("user.json", %{user: user})
     end
   end
 
