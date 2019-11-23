@@ -39,3 +39,5 @@ npm-debug.log
 
 *.hidden
 *.secret.exs
+
+generated_code.csv
