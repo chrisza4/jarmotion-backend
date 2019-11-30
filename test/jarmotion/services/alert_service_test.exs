@@ -53,7 +53,9 @@ defmodule Jarmotion.Service.AlertServiceTest do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
-      {:ok, awa: awa, chris: chris}
+      {:ok, random_guy} = TestSetup.create_user(%{email: "rand@test.com"}, "mypassword")
+      TestSetup.create_relationship(chris.id, awa.id)
+      {:ok, awa: awa, chris: chris, random_guy: random_guy}
     end
 
     test "If schema correct Should be able to add alert", %{chris: chris, awa: awa} do
@@ -61,6 +63,13 @@ defmodule Jarmotion.Service.AlertServiceTest do
       assert alert.owner_id == chris.id
       assert alert.to_user_id == awa.id
       assert alert.status == "created"
+    end
+
+    test "Should not be able to add alert to people unkown to you", %{
+      chris: chris,
+      random_guy: random_guy
+    } do
+      assert({:error, :forbidden} == AlertService.add_alert(chris.id, random_guy.id))
     end
 
     test "Should trigger post_alert", %{chris: chris, awa: awa} do

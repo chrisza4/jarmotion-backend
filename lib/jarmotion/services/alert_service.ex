@@ -1,16 +1,20 @@
 defmodule Jarmotion.Service.AlertService do
-  alias Jarmotion.Repo.AlertRepo
+  alias Jarmotion.Repo.{AlertRepo, RelationshipRepo}
   alias Jarmotion.Schemas.Alert
   alias Jarmotion.Service.AlertPostService
 
   require Logger
 
   def add_alert(by_user_id, to_user_id) do
-    with {:ok, alert} <-
+    with {:in_relationship, true} <-
+           {:in_relationship, RelationshipRepo.in_relationship?(by_user_id, to_user_id)},
+         {:ok, alert} <-
            Alert.new(%{owner_id: by_user_id, to_user_id: to_user_id, status: "created"}),
          {:ok, alert} <- AlertRepo.insert(alert) do
       AlertPostService.post_add_alert(alert)
       {:ok, alert}
+    else
+      {:in_relationship, false} -> {:error, :forbidden}
     end
   end
 
