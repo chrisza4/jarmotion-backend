@@ -11,7 +11,8 @@ defmodule Jarmotion.Service.EmojiPostService do
     JarmotionWeb.Endpoint.broadcast("user:#{emoji.owner_id}", "emoji:add", %{id: emoji.id})
 
     Task.async(fn ->
-      SensorService.list_trigger_sensors(emoji.owner_id) |> SensorService.send_push_to_sensors()
+      SensorService.get_trigger_sensors_by_type(emoji.owner_id, emoji.type)
+      |> SensorService.send_push_to_sensors()
     end)
   end
 end

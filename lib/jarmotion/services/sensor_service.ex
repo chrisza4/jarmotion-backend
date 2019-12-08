@@ -22,16 +22,16 @@ defmodule Jarmotion.Service.SensorService do
     {:ok, SensorRepo.list_by_owner(by_user_id)}
   end
 
-  def list_trigger_sensors(owner_id) do
+  def get_trigger_sensors_by_type(owner_id, type) do
     friend_ids = RelationshipRepo.get_friend_ids(owner_id)
-    emoji_stats = EmojiRepo.count_by_type_today(owner_id)
+    emoji_stats = EmojiRepo.count_by_type_today(owner_id, type)
     sensors = SensorRepo.list_by_owners(friend_ids)
 
     trigger_sensors =
       sensors
       |> Enum.filter(fn sensor ->
         Enum.any?(emoji_stats, fn emoji_stat ->
-          emoji_stat.type == sensor.emoji_type and emoji_stat.count >= sensor.threshold
+          emoji_stat.count >= sensor.threshold
         end)
       end)
 

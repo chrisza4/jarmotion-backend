@@ -41,7 +41,7 @@ defmodule Jarmotion.Service.SensorServiceTest do
     end
   end
 
-  describe "list_trigger_sensors" do
+  describe "get_trigger_sensors_by_type" do
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com"}, "mypassword")
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
@@ -51,18 +51,29 @@ defmodule Jarmotion.Service.SensorServiceTest do
       {:ok, %{chris: chris, awa: awa}}
     end
 
-    test "Given chris set too enraged to be 2, Should told chris that awa is too enraged", %{
-      awa: awa,
-      chris: chris
-    } do
+    test "Given chris set too enraged to be 2, Should told chris that awa is engaged emoji is added above treshold",
+         %{
+           awa: awa,
+           chris: chris
+         } do
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
-      sensors = SensorService.list_trigger_sensors(awa.id)
+      sensors = SensorService.get_trigger_sensors_by_type(awa.id, "enraged")
       assert length(sensors) == 0
 
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
-      sensors = SensorService.list_trigger_sensors(awa.id)
+      sensors = SensorService.get_trigger_sensors_by_type(awa.id, "enraged")
       assert length(sensors) == 1
       assert Enum.at(sensors, 0).owner_id == chris.id
+    end
+
+    test "Given chris set too enraged to be 2, Should not told chris that awa is too enraged if added emoji is not enraged",
+         %{
+           awa: awa
+         } do
+      TestSetup.create_emoji(awa.id, %{type: "enraged"})
+      TestSetup.create_emoji(awa.id, %{type: "enraged"})
+      sensors = SensorService.get_trigger_sensors_by_type(awa.id, "hungry")
+      assert length(sensors) == 0
     end
   end
 

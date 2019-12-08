@@ -36,6 +36,19 @@ defmodule Jarmotion.Repo.EmojiRepo do
     |> Repo.all()
   end
 
+  def count_by_type_today(owner_id, type) do
+    begin_of_today = Timex.now("Asia/Bangkok") |> Timex.Protocol.beginning_of_day()
+    end_of_today = Timex.now("Asia/Bangkok") |> Timex.Protocol.end_of_day()
+
+    from(e in Emoji,
+      where:
+        e.owner_id == ^owner_id and e.inserted_at >= ^begin_of_today and
+          e.inserted_at <= ^end_of_today and e.type == ^type,
+      select: %{count: count(e)}
+    )
+    |> Repo.all()
+  end
+
   def max_by_month(owner_id, year, month) do
     begin = Timex.to_datetime({year, month, 1}, :local)
     finish = Timex.Protocol.end_of_month(begin)
