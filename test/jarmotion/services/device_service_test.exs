@@ -19,9 +19,9 @@ defmodule Jarmotion.Service.DeviceServiceTest do
       assert {:ok, device2} = DeviceService.regis_device(chris.id, "token2")
       assert {:ok, devices_chris} = DeviceService.list_devices(chris.id)
 
-      assert length(devices_chris) == 2
-      assert Enum.at(devices_chris, 1).id == device2.id
-      assert Enum.at(devices_chris, 0).id == device1.id
+      assert length(devices_chris) == 1
+      assert Enum.at(devices_chris, 0).id == device2.id
+      assert Enum.at(devices_chris, 0).token == "token2"
     end
 
     test "Error forbidden when user not exists" do

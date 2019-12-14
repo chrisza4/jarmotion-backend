@@ -3,12 +3,12 @@ defmodule Jarmotion.Repo.DeviceRepo do
   alias Jarmotion.Schemas.{Device, Sensor}
   alias Jarmotion.Repo
 
-  def regis_device(%Device{} = device) do
-    current_device = Repo.get_by(Device, token: device.token, owner_id: device.owner_id)
+  def set_device_for_user(%Device{} = device) do
+    current_device = Repo.get_by(Device, owner_id: device.owner_id)
 
     case current_device do
       nil -> Repo.insert(device)
-      _ -> {:ok, current_device}
+      _ -> Ecto.Changeset.change(current_device, token: device.token) |> Repo.update()
     end
   end
 
@@ -34,6 +34,11 @@ defmodule Jarmotion.Repo.DeviceRepo do
 
   def revoke(user_id, token) do
     from(device in Device, where: device.owner_id == ^user_id and device.token == ^token)
+    |> Repo.delete_all()
+  end
+
+  def revoke(user_id) do
+    from(device in Device, where: device.owner_id == ^user_id)
     |> Repo.delete_all()
   end
 end

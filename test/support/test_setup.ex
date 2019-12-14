@@ -35,7 +35,7 @@ defmodule Jarmotion.TestSetup do
 
   def create_device(owner_id, token) do
     {:ok, device} = Device.new(%{owner_id: owner_id, token: token})
-    DeviceRepo.regis_device(device)
+    DeviceRepo.set_device_for_user(device)
   end
 
   def create_sensor(by_user_id, emoji_type, threshold) do

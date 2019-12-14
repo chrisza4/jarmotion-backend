@@ -5,7 +5,7 @@ defmodule Jarmotion.Service.DeviceService do
   def regis_device(by_user_id, token) do
     with {:ok, device} <- Device.new(%{owner_id: by_user_id, token: token}) do
       try do
-        DeviceRepo.regis_device(device)
+        DeviceRepo.set_device_for_user(device)
       rescue
         _ in Ecto.ConstraintError -> {:error, :forbidden}
       end
