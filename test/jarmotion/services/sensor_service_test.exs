@@ -47,6 +47,7 @@ defmodule Jarmotion.Service.SensorServiceTest do
       {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com"}, "mypassword")
       TestSetup.create_relationship(chris.id, awa.id)
       {:ok, _} = TestSetup.create_sensor(chris.id, "enraged", 2)
+      {:ok, _} = TestSetup.create_sensor(chris.id, "love", 1)
 
       {:ok, %{chris: chris, awa: awa}}
     end
@@ -72,12 +73,13 @@ defmodule Jarmotion.Service.SensorServiceTest do
          } do
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
       TestSetup.create_emoji(awa.id, %{type: "enraged"})
+      TestSetup.create_emoji(awa.id, %{type: "hungry"})
       sensors = SensorService.get_trigger_sensors_by_type(awa.id, "hungry")
       assert length(sensors) == 0
     end
   end
 
-  describe "send_push_to_sensors" do
+  describe "send_push" do
     @push_response {:ok,
                     [
                       %{"status" => "ok", "id" => "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}
@@ -85,33 +87,25 @@ defmodule Jarmotion.Service.SensorServiceTest do
 
     setup %{} do
       {:ok, chris} = TestSetup.create_user(%{email: "chris@test.com", name: "chris"})
-      {:ok, _} = TestSetup.create_device(chris.id, "mytoken1")
+      {:ok, awa} = TestSetup.create_user(%{email: "awa@test.com", name: "Awa"})
       {:ok, _} = TestSetup.create_device(chris.id, "mytoken2")
       {:ok, sensor} = TestSetup.create_sensor(chris.id, "enraged", 2)
-      {:ok, sensor: sensor}
+      {:ok, sensor: sensor, awa: awa}
     end
 
     test "Given chris set too enraged to be 2, Should told chris that awa is too enraged", %{
-      sensor: sensor
+      sensor: sensor,
+      awa: awa
     } do
       with_mock(ExponentServerSdk.PushNotification, push_list: fn _ -> @push_response end) do
-        assert :ok == SensorService.send_push_to_sensors([sensor])
+        assert :ok == SensorService.send_push([sensor], awa.id)
 
         assert_called(
           ExponentServerSdk.PushNotification.push_list([
             %{
-              to: "mytoken1",
-              title: "Alert",
-              body: "Your partner is currently enraged.",
-              data: %{
-                type: "sensor",
-                id: sensor.id
-              }
-            },
-            %{
               to: "mytoken2",
               title: "Alert",
-              body: "Your partner is currently enraged.",
+              body: "Awa is currently enraged.",
               data: %{
                 type: "sensor",
                 id: sensor.id

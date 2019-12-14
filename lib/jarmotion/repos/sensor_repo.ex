@@ -29,6 +29,14 @@ defmodule Jarmotion.Repo.SensorRepo do
     |> Repo.all()
   end
 
+  def list_by_owners_and_type(user_ids, type) do
+    from(sensor in Sensor,
+      where: sensor.owner_id in ^user_ids and sensor.emoji_type == ^type,
+      select: sensor
+    )
+    |> Repo.all()
+  end
+
   def delete_by_owner_and_type(user_id, emoji_type) do
     from(sensor in Sensor,
       where: sensor.owner_id == ^user_id and sensor.emoji_type == ^emoji_type

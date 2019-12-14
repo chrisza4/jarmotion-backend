@@ -12,7 +12,7 @@ defmodule Jarmotion.Service.EmojiPostService do
 
     Task.async(fn ->
       SensorService.get_trigger_sensors_by_type(emoji.owner_id, emoji.type)
-      |> SensorService.send_push_to_sensors()
+      |> SensorService.send_push(emoji.owner_id)
     end)
   end
 end

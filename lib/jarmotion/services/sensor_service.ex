@@ -1,6 +1,6 @@
 defmodule Jarmotion.Service.SensorService do
   alias Jarmotion.Schemas.Sensor
-  alias Jarmotion.Repo.{SensorRepo, RelationshipRepo, EmojiRepo, DeviceRepo}
+  alias Jarmotion.Repo.{SensorRepo, RelationshipRepo, EmojiRepo, DeviceRepo, UserRepo}
 
   def upsert_sensor(by_user_id, type, threshold) do
     with {:ok, sensor} <-
@@ -25,7 +25,7 @@ defmodule Jarmotion.Service.SensorService do
   def get_trigger_sensors_by_type(owner_id, type) do
     friend_ids = RelationshipRepo.get_friend_ids(owner_id)
     emoji_stats = EmojiRepo.count_by_type_today(owner_id, type)
-    sensors = SensorRepo.list_by_owners(friend_ids)
+    sensors = SensorRepo.list_by_owners_and_type(friend_ids, type)
 
     trigger_sensors =
       sensors
@@ -38,7 +38,9 @@ defmodule Jarmotion.Service.SensorService do
     trigger_sensors
   end
 
-  def send_push_to_sensors(sensors) do
+  def send_push(sensors, from_user_id) do
+    user = UserRepo.get(from_user_id)
+
     push_result =
       sensors
       |> Enum.map(& &1.id)
@@ -47,7 +49,7 @@ defmodule Jarmotion.Service.SensorService do
         %{
           to: device.token,
           title: "Alert",
-          body: "Your partner is currently #{sensor.emoji_type}.",
+          body: "#{user.name} is currently #{sensor.emoji_type}.",
           data: %{
             type: "sensor",
             id: sensor.id
