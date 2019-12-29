@@ -41,3 +41,4 @@ npm-debug.log
 *.secret.exs
 
 generated_code.csv
+generated_code_wedding.csv

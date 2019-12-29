@@ -15,7 +15,8 @@ defmodule Jarmotion.Service.AlertPushService do
           data: %{
             type: "alert",
             id: alert.id
-          }
+          },
+          sound: "default"
         }
       end)
 

@@ -36,7 +36,8 @@ defmodule Jarmotion.Service.AlertPushServiceTest do
               data: %{
                 type: "alert",
                 id: alert.id
-              }
+              },
+              sound: "default"
             }
           ])
         )
@@ -64,10 +65,6 @@ defmodule Jarmotion.Service.AlertPushServiceTest do
         updated_alert = AlertRepo.get(alert.id)
         assert updated_alert.status == "push_failed"
       end
-    end
-
-    @tag :skip
-    test "Should notify sender that push notification failed" do
     end
   end
 end
