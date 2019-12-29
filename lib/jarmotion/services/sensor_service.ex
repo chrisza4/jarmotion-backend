@@ -53,7 +53,8 @@ defmodule Jarmotion.Service.SensorService do
           data: %{
             type: "sensor",
             id: sensor.id
-          }
+          },
+          sound: "default"
         }
       end)
       |> ExponentServerSdk.PushNotification.push_list()
